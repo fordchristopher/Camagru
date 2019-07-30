@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css?family=Dancing+Script|Josefin+Sans&display=swap');
+
+/*
+ * font-family: 'Dancing Script', cursive;
+ * font-family: 'Josefin Sans', sans-serif;
+ */
+
+/*
+ * Color scheme:
+ * Dusty (pink) #96858F
+ * Lavendar (blue) #6D7993
+ * Overcast (gray) #9099A2
+ * Paper (light) #FAFAFA
+ */
+
+.App {
+  text-align: center;
+}
+
+html {
+}
+
+body {
+}
+
+.shadow {
+	box-shadow: 1px 5px 4px #6D7993;
+}
+
+.container-body {
+	margin: 205px 120px 0 120px;
+	height: 100vh;
+	display: block;
+}
+
+.container-login {
+	margin: 400px 80px 0 80px;
+	height: 30%;
+}

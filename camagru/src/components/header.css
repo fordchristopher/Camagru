@@ -1,0 +1,22 @@
+@import "../App.css";
+
+.container-head {
+	position: fixed;
+	background: #ffffff;
+	top: 0;
+	width: 100%;
+	display: block;
+}
+
+.text-primary {
+	font-family: 'Dancing Script', cursive;
+}
+
+.text-header {
+	font-size: 80px;
+}
+
+.text-center {
+	margin-left: auto;
+	margin-right: auto;
+}

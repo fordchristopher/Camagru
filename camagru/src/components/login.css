@@ -1,0 +1,41 @@
+@import '../App.css';
+
+.wrapper {	
+	margin-top: 80px;
+	margin-bottom: 80px;
+}
+
+.button-primary {
+	color: #FAFAFA;
+	background: #6D7993;
+}
+
+.form-signin {
+	max-width: 380px;
+	padding: 15px 35px 45px;
+	font-family: 'Dancing Script', cursive;
+	margin: 0 auto;
+	border: 1px solid rgba(0,0,0,0.1);  
+
+	.form-signin-heading,
+
+	.form-control {
+		position: relative;
+		font-size: 16px;
+		height: auto;
+		padding: 10px;
+		display: block;
+	}
+
+	input[type="text"] {
+		margin-bottom: -1px;
+		border-bottom-left-radius: 0;
+		border-bottom-right-radius: 0;
+	}
+
+	input[type="password"] {
+		margin-bottom: 20px;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+}
