@@ -1,5 +1,7 @@
 import React from 'react';
 import './login.css';
+import { validatePassword } from '../auxiliary.js';
+import { validateEmail } from '../auxiliary.js';
 
 class Login extends React.Component {
 	constructor() {
@@ -10,6 +12,7 @@ class Login extends React.Component {
 			new_email: "",
 			new_pass: "",
 			new_name: "",
+			forgotten: false
 		}
 	}
 
@@ -19,35 +22,62 @@ class Login extends React.Component {
 		});
 	}
 
+	forgotPassword = () => {
+		let email = window.prompt("Please enter your email address");
+		//Need to validate the email address
+		if (email !== "")
+			alert(`Instructions have been sent to ${email} if there is an account associated with it`);
+		else
+			alert("Please enter a valid email address");
+	}
+
+	register = () => {
+		console.log(validatePassword(this.state.new_pass));
+		if (validatePassword(this.state.new_pass) === false)
+		{
+			alert("Password must include an uppercase letter, a lowercase letter and a number");
+			return ;
+		}
+		if (validateEmail(this.state.new_email) === false)
+		{
+			alert("Please enter a valid email adress");
+			return ;
+		}
+		//send state to username to create a new user record backend
+		alert(`An email to complete the registration has been sent to ${this.state.new_email}`);
+	}
+
 	render() {
 		return (
-	<div className='container-login'>
-		<div className="wrapper">
-			<form className="form-signin shadow">
-				<h2 className="form-signin-heading">Login</h2>
-				<input type="text" onChange={this.handleChange} className="form-control" name="username" placeholder="Email Address"/>
-				<input type="password" onChange={this.handleChange} className="form-control" name="password" placeholder="Password"/>
-				<button type='button' className="button-primary" onClick={() => this.props.login(this.state.username, this.state.password)}>Login</button>
-			</form>
-			<br />
-			<hr />
-			<br />
-			<form className="form-signin shadow">
-				<h2 className="form-signin-heading">Register</h2>
-				<div className="block">
-					<input type="text" onChange={this.handleChange} className="form-control" name="new_email" placeholder="Email Address"/>
-				</div>
-				<div className="block">
-					<input type="password" onChange={this.handleChange} className="form-control" name="new_pass" placeholder="Password"/>
-				</div>
-				<div className="block">
-					<input type="name" onChange={this.handleChange} className="form-control" name="new_name" placeholder="Name" />
-				</div>
-			<br />
-			<button type='button' className="button-primary">Create Account</button>
-			</form>
+		<div className='container-login'>
+			<div className="wrapper">
+				<form className="form-signin shadow">
+					<h2 className="form-signin-heading">Login</h2>
+					<input type="text" onChange={this.handleChange} className="form-control" name="username" placeholder="Email Address"/>
+					<input type="password" onChange={this.handleChange} className="form-control" name="password" placeholder="Password"/>
+					<button type='button' className="button-primary" onClick={() => this.props.login(this.state.username, this.state.password)}>Login</button>
+				<br />
+					<button type='button' className="button-primary" onClick={this.forgotPassword}>Forgot password</button>
+				</form>
+				<br />
+				<hr />
+				<br />
+				<form className="form-signin shadow">
+					<h2 className="form-signin-heading">Register</h2>
+					<div className="block">
+						<input type="text" onChange={this.handleChange} className="form-control" name="new_email" placeholder="Email Address"/>
+					</div>
+					<div className="block">
+						<input type="password" onChange={this.handleChange} className="form-control" name="new_pass" placeholder="Password"/>
+					</div>
+					<div className="block">
+						<input type="name" onChange={this.handleChange} className="form-control" name="new_name" placeholder="Name" />
+					</div>
+				<br />
+				<button onClick={this.register} type='button' className="button-primary">Create Account</button>
+				</form>
+			</div>
 		</div>
-	</div>
 		)
 	}
 }

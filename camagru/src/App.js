@@ -28,7 +28,7 @@ class App extends React.Component {
 
 	logout = (username, pass) => {
 		this.setState({
-			user: 'null'
+			user: ""
 		});
 	}
 

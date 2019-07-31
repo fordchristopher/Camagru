@@ -10,6 +10,12 @@
 	background: #6D7993;
 }
 
+@media only screen and (max-width: 600px) {
+	.form-signin {
+		width: 200px;
+	}
+}
+
 .form-signin {
 	max-width: 380px;
 	padding: 15px 35px 45px;
