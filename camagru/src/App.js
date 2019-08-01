@@ -2,7 +2,7 @@ import React from 'react';
 import Header from './components/header.js';
 import Footer from './components/footer.js';
 import Login from './components/login.js';
-import Stream from './components/stream4.js';
+import Stream from './components/stream.js';
 import Account from './components/account.js';
 import './App.css';
 
