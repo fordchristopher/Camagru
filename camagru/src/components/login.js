@@ -7,7 +7,7 @@ class Login extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			username: "",
+			email: "",
 			password: "",
 			new_email: "",
 			new_pass: "",
@@ -53,9 +53,9 @@ class Login extends React.Component {
 			<div className="wrapper">
 				<form className="form-signin shadow">
 					<h2 className="form-signin-heading">Login</h2>
-					<input type="text" onChange={this.handleChange} className="form-control" name="username" placeholder="Email Address"/>
+					<input type="text" onChange={this.handleChange} className="form-control" name="email" placeholder="Email Address"/>
 					<input type="password" onChange={this.handleChange} className="form-control" name="password" placeholder="Password"/>
-					<button type='button' className="button-primary" onClick={() => this.props.login(this.state.username, this.state.password)}>Login</button>
+					<button type='button' className="button-primary" onClick={() => this.props.login(this.state.email, this.state.password)}>Login</button>
 				<br />
 					<button type='button' className="button-primary" onClick={this.forgotPassword}>Forgot password</button>
 				</form>

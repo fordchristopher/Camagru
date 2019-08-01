@@ -8,8 +8,12 @@
 	display: block;
 }
 
-.text-primary {
-	font-family: 'Dancing Script', cursive;
+.container-foot {
+	position: fixed;
+	background: #FAFAFA;
+	bottom: 0;
+	width: 100%;
+	display: block;
 }
 
 .text-header {

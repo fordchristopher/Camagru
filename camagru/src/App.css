@@ -23,8 +23,48 @@ html {
 body {
 }
 
+.overlay {
+	background: blue;
+	position: absolute;
+	top: 150px;
+	right: 750px;
+}
+
+#capture {
+	width: 350px;
+	height: 350px;
+	position: absolute;
+	background: pink;
+	top: 200px;
+	right: 450px;
+}
+
+.container-icon {
+	height: 35px;
+	width: 35px;
+	position: absolute;
+	right: 0;
+}
+
+.small-top-margin {
+	margin-top: 35px;
+}
+
+.icon {
+	height:100%;
+	width: 100%;
+}
+
 .shadow {
 	box-shadow: 1px 5px 4px #6D7993;
+}
+
+.text-primary {
+	font-family: 'Dancing Script', cursive;
+}
+
+.text-secondary {
+	font-family: 'Josefin Sans', sans-serif;
 }
 
 .container-body {
