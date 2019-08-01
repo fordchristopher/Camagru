@@ -1,13 +1,15 @@
 import React from "react";
 import Fish from "./pictures/fish.png";
 import Cracks from "./pictures/cracks_burned.png";
+import Hello from "./pictures/Hello.png";
 import "./studio.css";
 
 class Stream extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			prop: null
+			prop: null,
+			photoTaken : false
 		};
 	}
 	componentDidMount(){
@@ -26,34 +28,54 @@ class Stream extends React.Component {
 			})
 			.catch(err => console.error(err));
 
-		document.querySelector("#snap").addEventListener('click', snapshot, false);
+		document.querySelector("#snap").addEventListener('click', () => snapshot(this.state.prop), false);
 
-		function snapshot() {
+		function snapshot(id) {
 			if (mediaStream) {
 				context.drawImage(video, 0, 0, video.width, video.height);
-				console.log(this.state);
-				/*if (this.state.prop != null)
-					context.drawImage(document.querySelector(`#{this.state.prop}`), 0, 0, video.width, video.height);
-			*/}
+				console.log(id);
+				if (id)
+					context.drawImage(document.querySelector(`#${id}`), 0, 0, video.width, video.height);
+			}
 		}
 	}
 
 	applyProp = (e) => {
 		this.setState({
 			prop : e.target.id
-		});
+		}, () => console.log(this.state));
+	}
+
+	allowPublish = () => {
+		this.setState({
+			photoTaken : true
+		}, console.log(this.state));
+	}
+
+	renderPublish = () => {
+		if (this.state.photoTaken)
+		{
+			return (
+				<button type='button' id="snap" className="button-primary">Save and Publish</button>
+			);
+		}
 	}
 
 	render() {
 		return (
 			<div>
-				<img id="Fish" class="prop" src={Fish} alt="city">
-				</img>
-				<img id="Cracks" class="prop" src={Cracks} alt="city">
-				</img>
+			<div className="container-props">
+				<img id="Fish" onClick={this.applyProp} className="prop" src={Fish} alt="Fish" />
+				<img onClick={this.applyProp} id="Cracks" className="prop" src={Cracks} alt="Cracks" />
+				<img onClick={this.applyProp} id="Hello" className="prop" src={Hello} alt="Hello" />
+			</div>
 				<video width="320" height="240"></video>
+			<br />
+				<button type='button' onClick={this.allowPublish} id="snap" className="button-primary">Take Photo</button>
+			<br />
 				<canvas width="320" height="240"></canvas>
-				<button onClick={this.register} type='button' id="snap" className="button-primary">Take Photo</button>
+				<br />
+			{this.renderPublish()}
 			</div>
 		);
 	}
