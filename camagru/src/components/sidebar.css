@@ -1,0 +1,24 @@
+@import "../App.css";
+
+.sidebar {
+	background: red;
+	position: absolute;
+	width: 275px;
+	height: 750px;
+	top: 280px;
+	right: 0;
+}
+
+.photo-old {
+	background: green;
+	height: 115px;
+	width: 115px;
+	margin-left: 50%;
+	transform: translateX(-50%);
+	margin-top: 5px;
+}
+
+.close {
+	height: 115px;
+	width: 115px;
+}

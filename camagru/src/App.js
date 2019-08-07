@@ -4,6 +4,7 @@ import Footer from './components/footer.js';
 import Login from './components/login.js';
 import Stream from './components/stream.js';
 import Account from './components/account.js';
+import Post from './components/post.js';
 import './App.css';
 
 class App extends React.Component {
@@ -48,10 +49,11 @@ class App extends React.Component {
 			login = <div>logged in!</div>;
 		return (
 		<div className="App">
-			{/*<Header showme={this.showme} />*/}
+			<Header showme={this.showme} />
 			{/*login*/}
 			{/*<Account user={this.state.user} />*/}
 			<Stream />
+			{/*<Post />*/}
 			<Footer user={this.state.user} logout={this.logout} />
 		</div>
 	  	);

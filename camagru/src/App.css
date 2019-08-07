@@ -15,12 +15,14 @@
 
 .App {
   text-align: center;
+  position: relative;
 }
 
 html {
 }
 
 body {
+	box-sizing: border-box;
 }
 
 .overlay {
