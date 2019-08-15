@@ -24,7 +24,7 @@ public class UserRepository {
     }
 
     public List<Map<String,Object>> getAll() {
-        return jdbcTemplate.queryForList("SELECT * FROM USERS;");
+        return jdbcTemplate.queryForList("SELECT * FROM users;");
     }
 
     public Message createUser(User user) {

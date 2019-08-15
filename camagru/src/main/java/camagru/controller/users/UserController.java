@@ -35,13 +35,18 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public Message createUser (@RequestParam("Userinfo") CreateUserPost userInfo) {
+    public Message createUser (@RequestParam("username") String username,
+                               @RequestParam("email") String email,
+                               @RequestParam("password") String password) {
             this.user = new User();
-            user.setEmail(userInfo.getEmail());
-            user.setPassword(userInfo.getPassword());
-            user.setUsername(userInfo.getUsername());
+            //user.setEmail(userInfo.getEmail());
+            //user.setPassword(userInfo.getPassword());
+            //user.setUsername(userInfo.getUsername());
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setUsername(username);
             user.setActive((byte)0);
-            user.setReceiveNotifications((byte)0);
+            user.setReceiveNotifications((byte)1);
             return (userRepository.createUser(user));
     }
 
