@@ -1,4 +1,4 @@
-package camagru.controller;
+package camagru;
 
 import java.sql.PreparedStatement;
 
@@ -11,13 +11,13 @@ public class User {
     private byte receive_notifications;
     private PreparedStatement statement;
 
-    User(String email, String username, String password, byte active, byte notify) {
+    /*public User(String email, String username, String password, byte active, byte notify) {
         this.email = email;
         this.username = username;
         this.password = password;
         this.active = active;
         this.receive_notifications = notify;
-    }
+    }*/
 
     public int getId() {
         return (this.id);

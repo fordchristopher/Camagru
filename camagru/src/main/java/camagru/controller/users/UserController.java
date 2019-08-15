@@ -1,6 +1,7 @@
-package camagru.controller;
+package camagru.controller.users;
 
 import camagru.Message;
+import camagru.User;
 import camagru.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,11 +18,11 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/{id}")
+  /*  @GetMapping("/{id}")
     public User getUser() {
         this.user = new User("email", "username", "password", (byte)0, (byte)1);
         return (this.user);
-    }
+    }*/
 //
     @GetMapping("/getAllUsernames")
     public List<String> getAllUsers() {
@@ -33,6 +34,18 @@ public class UserController {
         return (userRepository.getAll());
     }
 
+    @PostMapping("/create")
+    public Message createUser (@RequestParam("Userinfo") CreateUserPost userInfo) {
+            this.user = new User();
+            user.setEmail(userInfo.getEmail());
+            user.setPassword(userInfo.getPassword());
+            user.setUsername(userInfo.getUsername());
+            user.setActive((byte)0);
+            user.setReceiveNotifications((byte)0);
+            return (userRepository.createUser(user));
+    }
+
+
 //
 /*    @GetMapping("/create")
     public Message createUser(@RequestParam Map<String, String> req) {
@@ -42,6 +55,4 @@ public class UserController {
         return (this.response);
     }
  */
- //   @PostMapping("/create")
-  //  public Message createUser
 }
