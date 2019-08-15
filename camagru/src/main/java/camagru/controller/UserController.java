@@ -1,8 +1,11 @@
-package camagru;
+package camagru.controller;
 
+import camagru.Message;
+import camagru.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping(path="/users", produces="application/json")
@@ -10,14 +13,18 @@ import java.util.Map;
 public class UserController {
     private User user;
     private Message response;
-    private MySQLSEL connection;
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/{id}")
     public User getUser() {
-        this.connection = new MySQLSEL();
-        this.connection.select("SELECT * FROM `users` WHERE 1;");
         this.user = new User("email", "username", "password", (byte)0, (byte)1);
         return (this.user);
+    }
+
+    @GetMapping("/getAll")
+    public List<String> getAllUsers() {
+        return (userRepository.getAllUserNames());
     }
 
 /*    @GetMapping("/create")

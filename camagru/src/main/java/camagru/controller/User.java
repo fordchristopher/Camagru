@@ -1,4 +1,6 @@
-package camagru;
+package camagru.controller;
+
+import java.sql.PreparedStatement;
 
 public class User {
     private int id;
@@ -7,6 +9,7 @@ public class User {
     private String password;
     private byte active;
     private byte receive_notifications;
+    private PreparedStatement statement;
 
     User(String email, String username, String password, byte active, byte notify) {
         this.email = email;
@@ -47,4 +50,6 @@ public class User {
     public void setActive(byte active) { this.active = active; }
 
     public void setReceiveNotifications(byte receive) { this.receive_notifications = receive; }
+
+
 }

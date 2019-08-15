@@ -1,5 +1,7 @@
 package camagru;
 
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.sql.*;
 //import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -10,12 +12,13 @@ public class MySQLSEL {
 
     MySQLSEL() {
         this.url = "jdbc:mysql://localhost:3306/camagru?autoReconnect=true&useSSL=false";
-        this.user = "chris";
-        this.pass = "chris";
+        this.user = "root";
+        this.pass = "root";
     }
 
     public void select(String query) {
-//        JdbcTemplate jdbc;
+        JdbcTemplate jdbc;
+        PreparedStatement statement;
         try {
             Connection myConn = DriverManager.getConnection(this.url, this.user, this.pass);
             Statement myStmt = myConn.createStatement();

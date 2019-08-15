@@ -25,8 +25,10 @@
 		</dependency>
 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<!--<groupId>org.springframework</groupId>-->
+           <!-- <artifactId>spring-jdbc</artifactId>-->
+			<artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
 		<dependency>
