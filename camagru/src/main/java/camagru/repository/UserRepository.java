@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class UserRepository {
@@ -17,5 +18,9 @@ public class UserRepository {
 
         usernameList.addAll(jdbcTemplate.queryForList("SELECT USERNAME FROM users;", String.class));
         return (usernameList);
+    }
+
+    public List<Map<String,Object>> getAll() {
+        return jdbcTemplate.queryForList("SELECT * FROM USERS;");
     }
 }
