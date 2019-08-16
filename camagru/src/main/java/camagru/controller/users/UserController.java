@@ -18,12 +18,12 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-  /*  @GetMapping("/{id}")
-    public User getUser() {
-        this.user = new User("email", "username", "password", (byte)0, (byte)1);
+    @GetMapping("/getUser")
+    public User getUser(@RequestParam("id") int id) {
+        this.user = userRepository.getUser(id);
         return (this.user);
-    }*/
-//
+    }
+
     @GetMapping("/getAllUsernames")
     public List<String> getAllUsers() {
         return (userRepository.getAllUserNames());
@@ -39,14 +39,11 @@ public class UserController {
                                @RequestParam("email") String email,
                                @RequestParam("password") String password) {
             this.user = new User();
-            //user.setEmail(userInfo.getEmail());
-            //user.setPassword(userInfo.getPassword());
-            //user.setUsername(userInfo.getUsername());
             user.setEmail(email);
             user.setPassword(password);
             user.setUsername(username);
-            user.setActive((byte)0);
-            user.setReceiveNotifications((byte)1);
+            user.setActive(0);
+            user.setReceiveNotifications(1);
             return (userRepository.createUser(user));
     }
 
