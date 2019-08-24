@@ -140,6 +140,7 @@ class Stream extends React.Component {
 					<br />
 					<button type='button' onClick={this.allowPublish} id="snap" className="button-primary">Take Photo</button>
 					<br />
+					<p>or upload here:</p>
 					<input type="file" onChange={this.acceptUpload} />
 					<br />
 					<canvas width="320" height="240"></canvas>
