@@ -11,8 +11,7 @@ class Stream extends React.Component {
 		this.state = {
 			prop: null,
 			photoTaken : false,
-			photoURL: null,
-			response: null
+			photoURL: null
 		};
 	}
 	componentDidMount(){
@@ -43,7 +42,7 @@ class Stream extends React.Component {
 	}
 
 	applyProp = (e) => {
-		if (this.state.prop !== e.target.id)
+		if (this.state.prop != e.target.id)
 		{
 			this.setState({
 				prop : e.target.id
@@ -82,24 +81,11 @@ class Stream extends React.Component {
 	}
 
 	publish = () => {
-		this.setState({
+/*		this.setState({
 			photoURL: document.querySelector("canvas").toDataURL("image/png")
-		}, () => {
-			fetch('http://localhost:8000/posts/add', {
-				method: 'post',
-				headers: {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
-				},
-				body: {
-					photo: this.state.photoURL,
-					//id: this.props.user.id,
-					id: 11
-				}
-			}).then(res => this.setState({response: res.json()}))
-//Is this 'data.response' or 'data.message'?
-			.then(alert(this.state.response));
-		});
+		}, () => console.log(this.state.photoURL));
+*/
+	window.location.href = document.querySelector("canvas").toDataURL("image/png").replace("image/png", "image/octet-stream");
 	}
 
 	renderPublish = () => {
@@ -115,7 +101,7 @@ class Stream extends React.Component {
 		if (this.state.prop !== null)
 		{
 			let source = document.querySelector(`#${this.state.prop}`).getAttribute("src");
-			return (<img alt="preview" src={source} className="prop overlay-img" />);
+			return (<img src={source} className="prop overlay-img" />);
 		}
 	}
 

@@ -17,7 +17,7 @@ class Sidebar extends React.Component {
 			<div className="photo-old">
 				d
 			</div>
-			<span class="close">&times;</span>
+			<span className="close">&times;</span>
 			<div className="photo-old">
 				d
 			</div>

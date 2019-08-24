@@ -18,9 +18,6 @@
   position: relative;
 }
 
-html {
-}
-
 body {
 	box-sizing: border-box;
 }
@@ -50,6 +47,10 @@ body {
 
 .small-top-margin {
 	margin-top: 35px;
+}
+
+.top-margin {
+	margin-top: 70px;
 }
 
 .icon {

@@ -52,7 +52,7 @@ class App extends React.Component {
 			<Header showme={this.showme} />
 			{/*login*/}
 			{/*<Account user={this.state.user} />*/}
-			<Stream />
+			<Stream user={this.state.user} />
 			{/*<Post />*/}
 			<Footer user={this.state.user} logout={this.logout} />
 		</div>

@@ -1,7 +1,7 @@
 @import "../App.css";
 
 .container-head {
-	position: fixed;
+	position: absolute;
 	background: #FAFAFA;
 	top: 0;
 	width: 100%;
@@ -9,7 +9,7 @@
 }
 
 .container-foot {
-	position: fixed;
+	position: absolute;
 	background: #FAFAFA;
 	bottom: 0;
 	width: 100%;
