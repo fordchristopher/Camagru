@@ -1,4 +1,5 @@
 import React from "react";
+import { baseURL } from "../global.js";
 import "./header.css";
 import home from "./pictures/home.png";
 import settings from "./pictures/account.png";
@@ -8,14 +9,20 @@ const Header = props => {
   if (props.user) {
     return (
       <div className="container-head">
-        <div className="container-icon" >
-          <img src={home} className="icon" alt="home" />
+        <div className="container-icon">
+          <a href={`${baseURL}/home`}>
+            <img src={home} className="icon" alt="home" />
+          </a>
         </div>
         <div className="container-icon small-top-margin">
-          <img src={settings} className="icon" alt="home" />
+          <a href={`${baseURL}/`}>
+            <img src={settings} className="icon" alt="home" />
+          </a>
         </div>
         <div className="container-icon top-margin">
-          <img src={camera} className="icon" alt="home" />
+          <a href={`${baseURL}/create`}>
+            <img src={camera} className="icon" alt="home" />
+          </a>
         </div>
         <h1
           onClick={props.showme}
@@ -29,10 +36,14 @@ const Header = props => {
     return (
       <div className="container-head">
         <div className="container-icon">
-          <img src={home} className="icon" alt="home" />
+          <a href={`${baseURL}/home`}>
+            <img src={home} className="icon" alt="home" />
+          </a>
         </div>
         <div className="container-icon small-top-margin">
-          <img src={settings} className="icon" alt="home" />
+          <a href={`${baseURL}/`}>
+            <img src={settings} className="icon" alt="home" />
+          </a>
         </div>
         <h1
           onClick={props.showme}

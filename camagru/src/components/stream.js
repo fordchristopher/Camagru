@@ -3,7 +3,7 @@ import Fish from "./pictures/fish.png";
 import Cracks from "./pictures/cracks_burned.png";
 import Hello from "./pictures/Hello.png";
 import Sidebar from "./sidebar.js";
-import { baseUrl } from '../global.js';
+import { APIUrl } from '../global.js';
 import "./studio.css";
 
 class Stream extends React.Component {
@@ -69,7 +69,7 @@ class Stream extends React.Component {
   };
 
   postPhoto = () => {
-    fetch(`${baseUrl}/posts/add`, {
+    fetch(`${APIUrl}/posts/add`, {
       method: "post",
       headers: {
         Accept: "application/json",
@@ -87,7 +87,6 @@ class Stream extends React.Component {
 };
 
   acceptUpload = () => {
-    var preview = document.querySelector("img");
     var file = document.querySelector("input[type=file]").files[0];
     var reader = new FileReader();
 

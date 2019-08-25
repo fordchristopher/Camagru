@@ -1,10 +1,10 @@
 import React from 'react';
 import Header from './components/header.js';
 import Footer from './components/footer.js';
-import Login from './components/login.js';
 import Stream from './components/stream.js';
 import Account from './components/account.js';
 import Post from './components/post.js';
+import { BrowserRouter, Route } from 'react-router-dom';
 import './App.css';
 
 class App extends React.Component {
@@ -39,18 +39,25 @@ class App extends React.Component {
   };
 
   render() {
-    let login;
-
-    if (this.state.user == null) login = <Login login={this.login} />;
-    else login = <div>logged in!</div>;
     return (
       <div className="App">
-        <Header showme={this.showme} />
-        {/*login*/}
-        {/*<Account user={this.state.user} />*/}
-        <Stream user={this.state.user} />
-        {/*<Post />*/}
-        <Footer user={this.state.user} logout={this.logout} />
+        <BrowserRouter>
+          <Header showme={this.showme} />
+          <Route
+            path="/"
+            render={() => <Account user={this.state.user} login={this.login} />}
+            exact
+          />
+          <Route
+            path="/create"
+            render={() => <Stream user={this.state.user} />}
+          />
+          <Route
+            path="/home"
+            render={() => <Post />}
+          />
+          <Footer user={this.state.user} logout={this.logout} />
+        </BrowserRouter>
       </div>
     );
   }

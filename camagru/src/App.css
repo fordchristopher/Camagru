@@ -22,6 +22,12 @@ body {
 	box-sizing: border-box;
 }
 
+.postContainer {
+	margin-top: 265px;
+	margin-bottom: 150px;
+	height: 100%;
+}
+
 .overlay {
 	background: blue;
 	position: absolute;
