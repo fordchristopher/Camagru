@@ -3,6 +3,7 @@ import Fish from "./pictures/fish.png";
 import Cracks from "./pictures/cracks_burned.png";
 import Hello from "./pictures/Hello.png";
 import Sidebar from "./sidebar.js";
+import { baseUrl } from '../global.js';
 import "./studio.css";
 
 class Stream extends React.Component {
@@ -68,7 +69,7 @@ class Stream extends React.Component {
   };
 
   postPhoto = () => {
-    fetch("http://localhost:8000/posts/add", {
+    fetch(`${baseUrl}/posts/add`, {
       method: "post",
       headers: {
         Accept: "application/json",
