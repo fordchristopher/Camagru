@@ -7,9 +7,8 @@ const Content = (props) => {
 			<div className="container-photo">
 			</div>
 			<div className='container-post'>
-				<h1 className="text-primary">Title</h1>
-				<h4 className="text-primary">Posted by user at time</h4>
-				<p className="text-secondary post-margin">He is currently the founder of Dvorak Media. Previously, Andrey was a product designer at </p>
+				<h1 className="text-primary">Photo by User</h1>
+				<h4 className="text-primary">Posted at time</h4>
 				<button type="button" onClick={props.showModal}>Comments (5)</button>
 				<button type="button">Like (10)</button>
 			</div>

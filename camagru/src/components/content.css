@@ -1,6 +1,7 @@
 @import '../App.css';
 
 .card-front {
+	margin: 10px 0 10px 0;
 	background: #96858F;
 	height: 240px;
 	width: 640px;

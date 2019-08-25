@@ -18,11 +18,14 @@
   position: relative;
 }
 
-html {
-}
-
 body {
 	box-sizing: border-box;
+}
+
+.postContainer {
+	margin-top: 265px;
+	margin-bottom: 150px;
+	height: 100%;
 }
 
 .overlay {
@@ -50,6 +53,10 @@ body {
 
 .small-top-margin {
 	margin-top: 35px;
+}
+
+.top-margin {
+	margin-top: 70px;
 }
 
 .icon {

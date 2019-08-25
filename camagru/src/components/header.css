@@ -6,6 +6,8 @@
 	top: 0;
 	width: 100%;
 	display: block;
+	z-index: 100;
+	height: 210px;
 }
 
 .container-foot {

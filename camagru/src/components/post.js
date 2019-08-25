@@ -33,16 +33,38 @@ class Post extends React.Component {
 
 	render() {
 		return(
-			<div>
-				<div id="myModal" class="modal">
-  					<div class="modal-content">
-					    <span class="close" onClick={this.closeModal}>&times;</span>
+			<div className="postContainer">
+				<div id="myModal" className="modal">
+  					<div className="modal-content">
+					    <span className="close" onClick={this.closeModal}>&times;</span>
 					    <p>Some text in the Modal..</p>
 						<textarea className="comment-entry" onChange={this.handleComment} placeholder="Enter your comment here (Max 90 characters)" />
 						<br />
 						<button type="button" onClick={this.submitComment}>Submit</button>
 					</div>
 				</div>
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
+			<Content showModal={this.showModal} closeModal={this.closeModal} />
 			<Content showModal={this.showModal} closeModal={this.closeModal} />
 			</div>
 		);

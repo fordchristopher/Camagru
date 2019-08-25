@@ -1,4 +1,5 @@
 import React from 'react';
+import Login from './login.js';
 import './login.css';
 
 class Account extends React.Component {
@@ -18,6 +19,8 @@ class Account extends React.Component {
 	}
 
 	render() {
+		if (this.props.user !== null)
+		{
 		return (
 	<div className='container-login'>
 		<div className="wrapper">
@@ -34,6 +37,9 @@ class Account extends React.Component {
 		</div>
 	</div>
 		)
+		}
+		else
+			return (<Login login={this.props.login} />)
 	}
 }
 

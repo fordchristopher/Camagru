@@ -9,6 +9,12 @@
 	right: 0;
 }
 
+@media only screen and (max-width: 1520px) {
+	.sidebar {
+	  display: none;
+	}
+  }
+
 .photo-old {
 	background: green;
 	height: 115px;
