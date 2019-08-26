@@ -1,6 +1,5 @@
 package camagru;
 
-import java.sql.PreparedStatement;
 import java.util.Map;
 
 public class User {
@@ -10,16 +9,6 @@ public class User {
     private String password;
     private int active;
     private int receive_notifications;
-    private PreparedStatement statement;
-
-    /*public User(String email, String username, String password, byte active, byte notify) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        this.active = active;
-        this.receive_notifications = notify;
-    }*/
-
     public int getId() {
         return (this.id);
     }
@@ -50,7 +39,9 @@ public class User {
 
     public void setUsername(String username) { this.username = username; }
 
-    public void setPassword(String password) { this.password = password; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public void setActive(int active) { this.active = active; }
 

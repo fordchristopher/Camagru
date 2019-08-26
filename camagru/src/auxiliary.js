@@ -15,5 +15,5 @@ export const validatePassword = (password) => {
 }
 
 export const validateEmail = (email) => {
-	return (email.indexOf('@') > 1);
+	return (email.indexOf('@') != -1);
 }

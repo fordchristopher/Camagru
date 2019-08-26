@@ -1,5 +1,6 @@
 import React from 'react';
 import './login.css';
+import { APIUrl, baseURL } from '../global.js';
 import { validatePassword } from '../auxiliary.js';
 import { validateEmail } from '../auxiliary.js';
 
@@ -43,20 +44,59 @@ class Login extends React.Component {
 			alert("Please enter a valid email adress");
 			return ;
 		}
-		//send state to username to create a new user record backend
-		alert(`An email to complete the registration has been sent to ${this.state.new_email}`);
+		/*fetch(`${APIUrl}/users/create`, {
+			method: "post",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json"
+			},
+			body: {
+				email: this.state.new_email,
+				username: this.state.new_name,
+				password: this.state.new_pass
+			}
+		})
+			.then(res => this.setState({ response: res.json() }))
+			//Is this 'data.response' or 'data.message'?
+			.then(alert(this.state.response));
+*/
+			let data = {
+				method: "post",
+				headers: {
+					'Origin': baseURL,
+					'Access-Control-Request-Method': 'POST',
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					Id: 1,
+					//email: this.state.new_email,
+					//username: this.state.new_name,
+					//password: this.state.new_pass,
+					//active: 0,
+					//receive_notifications: 1
+				})
+			}
+
+			console.log(data);
+
+			fetch(`${APIUrl}/users/test`, data);
+
+
+
+
+	alert(`An email to complete the registration has been sent to ${this.state.new_email}`);
 	}
 
-	render() {
-		return (
+render() {
+	return (
 		<div className='container-login'>
 			<div className="wrapper">
 				<form className="form-signin shadow">
 					<h2 className="form-signin-heading">Login</h2>
-					<input type="text" onChange={this.handleChange} className="form-control" name="email" placeholder="Email Address"/>
-					<input type="password" onChange={this.handleChange} className="form-control" name="password" placeholder="Password"/>
+					<input type="text" onChange={this.handleChange} className="form-control" name="email" placeholder="Email Address" />
+					<input type="password" onChange={this.handleChange} className="form-control" name="password" placeholder="Password" />
 					<button type='button' className="button-primary" onClick={() => this.props.login(this.state.email, this.state.password)}>Login</button>
-				<br />
+					<br />
 					<button type='button' className="button-primary" onClick={this.forgotPassword}>Forgot password</button>
 				</form>
 				<br />
@@ -65,21 +105,21 @@ class Login extends React.Component {
 				<form className="form-signin shadow">
 					<h2 className="form-signin-heading">Register</h2>
 					<div className="block">
-						<input type="text" onChange={this.handleChange} className="form-control" name="new_email" placeholder="Email Address"/>
+						<input type="text" onChange={this.handleChange} className="form-control" name="new_email" placeholder="Email Address" />
 					</div>
 					<div className="block">
-						<input type="password" onChange={this.handleChange} className="form-control" name="new_pass" placeholder="Password"/>
+						<input type="password" onChange={this.handleChange} className="form-control" name="new_pass" placeholder="Password" />
 					</div>
 					<div className="block">
 						<input type="name" onChange={this.handleChange} className="form-control" name="new_name" placeholder="Name" />
 					</div>
-				<br />
-				<button onClick={this.register} type='button' className="button-primary">Create Account</button>
+					<br />
+					<button onClick={this.register} type='button' className="button-primary">Create Account</button>
 				</form>
 			</div>
 		</div>
-		)
-	}
+	)
+}
 }
 
 export default Login;

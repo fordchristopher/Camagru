@@ -2,16 +2,18 @@ package camagru.controller.users;
 
 import camagru.Message;
 import camagru.User;
+import camagru.UserInfo;
 import camagru.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping(path="/users", produces="application/json")
-@CrossOrigin(origins="*")
+@CrossOrigin(origins="http://localhost:3000")
 public class UserController {
     private User user;
     private Message response;
@@ -31,11 +33,12 @@ public class UserController {
 
     @GetMapping("/getAll")
     public List<Map<String, Object>> getAll() {
+        System.out.println("Into the API!");
         return (userRepository.getAll());
     }
 
-    @PostMapping("/create")
-    public Message createUser (@RequestParam("username") String username,
+    @PostMapping(path = "/create", consumes = "application/json", produces = "application/json")
+    public Message createUser(@RequestParam("username") String username,
                                @RequestParam("email") String email,
                                @RequestParam("password") String password) {
             this.user = new User();
@@ -44,9 +47,17 @@ public class UserController {
             user.setUsername(username);
             user.setActive(0);
             user.setReceiveNotifications(1);
+            System.out.println("Into the API!");
             return (userRepository.createUser(user));
     }
 
+    @PostMapping(path = "/test", consumes = "application/json", produces = "application/json")
+    public void testit(@RequestBody UserInfo test) {
+        System.out.println("Into the API");
+        System.out.println(test.getId());
+        test.setId(15);
+        System.out.println(test.getId());
+    }
 
 //
 /*    @GetMapping("/create")
