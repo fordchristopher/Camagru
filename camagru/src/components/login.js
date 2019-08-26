@@ -68,12 +68,12 @@ class Login extends React.Component {
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
-					Id: 1,
-					//email: this.state.new_email,
-					//username: this.state.new_name,
-					//password: this.state.new_pass,
-					//active: 0,
-					//receive_notifications: 1
+	//				id: 100,
+					email: this.state.new_email,
+					username: this.state.new_name,
+					password: this.state.new_pass//,
+	//				active: 0,
+	//				receive_notifications: 1
 				})
 			}
 

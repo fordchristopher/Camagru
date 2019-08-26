@@ -3,13 +3,13 @@ package camagru;
 import camagru.User;
 
 public class UserInfo {
-    private int Id;
+    private int id;
 
     public int getId() {
-        return (this.Id);
+        return (this.id);
     }
 
     public void setId(int id) {
-        this.Id = id;
+        this.id = id;
     }
 }
