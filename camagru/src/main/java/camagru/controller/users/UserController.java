@@ -52,11 +52,8 @@ public class UserController {
     }
 
     @PostMapping(path = "/test", consumes = "application/json", produces = "application/json")
-    public void testit(@RequestBody User test) {
-        System.out.println(test.getId());
-        System.out.println(test.getUsername());
-        System.out.println(test.getEmail());
-        System.out.println(test.getPassword());
+    public Message testit(@RequestBody User user) {
+        return (userRepository.createUser(user));
     }
 
 //

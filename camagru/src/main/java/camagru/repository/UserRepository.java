@@ -40,8 +40,8 @@ public class UserRepository {
     public Message createUser(User user) {
         Message msg = new Message();
         try {
-            jdbcTemplate.update("INSERT INTO users (`email`, `username`, `password`, `active`, `receive_notifications`) VALUES (?, ?, ?, ?, ?);",
-                    user.getEmail(), user.getUsername(), user.getPassword(), user.getActive(), user.getReceiveNotifications());
+            jdbcTemplate.update("INSERT INTO users (`email`, `username`, `password`) VALUES (?, ?, ?);",
+                    user.getEmail(), user.getUsername(), user.getPassword());
             msg.setResponse("Success");
         } catch (Exception e) {
             msg.setResponse("User Creation failed");
