@@ -33,7 +33,6 @@ class Login extends React.Component {
 	}
 
 	register = () => {
-		console.log(validatePassword(this.state.new_pass));
 		if (validatePassword(this.state.new_pass) === false)
 		{
 			alert("Password must include an uppercase letter, a lowercase letter and a number");
@@ -57,7 +56,9 @@ class Login extends React.Component {
 				password: this.state.new_pass
 			})
 		}
-		fetch(`${APIUrl}/users/create`, data).then(res => console.log(res.body));
+		fetch(`${APIUrl}/users/create`, data)
+		.then(res => res.json())
+		.then(data => alert(data.response));
 	}
 
 	render() {

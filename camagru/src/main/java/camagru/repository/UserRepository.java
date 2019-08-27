@@ -37,12 +37,21 @@ public class UserRepository {
         return (this.user);
     }
 
+    public int getUserId(User user) {
+        Message msg = new Message();
+        List<Map<String, Object>> res;
+
+        res = jdbcTemplate.queryForList("SELECT id FROM users WHERE email = ?;", user.getEmail());
+        if (res.size() > 0) {
+            return ((int) res.get(0).get("id"));
+        }
+        return (-1);
+    }
+
     public Message createUser(User user) {
         Message msg = new Message();
-        List<Map<String, Object>> res = new ArrayList<>();
 
-        res.addAll(jdbcTemplate.queryForList("SELECT id FROM users WHERE email = ?;", user.getEmail()));
-        if (res.size() > 0) {
+        if (this.getUserId(user) > 0) {
             msg.setResponse("Duplicate email address, please enter a new email.");
             return (msg);
         }

@@ -1,4 +1,4 @@
-package camagru;
+/*package camagru;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -33,3 +33,4 @@ public class MySQLSEL {
         }
     }
 }
+*/

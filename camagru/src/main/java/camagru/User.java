@@ -19,9 +19,7 @@ public class User {
         return (this.username);
     }
 
-    public String getPassword() {
-        return (this.password);
-    }
+    public String getPassword() { return (password); }
 
     public int getActive() {
         return (this.active);
@@ -39,8 +37,12 @@ public class User {
 
     public void setUsername(String username) { this.username = username; }
 
+    public String hashIt(String str) {
+        return (str);
+    }
+
     public void setPassword(String password) {
-        this.password = password;
+        this.password = this.hashIt(password);
     }
 
     public void setActive(int active) { this.active = active; }
