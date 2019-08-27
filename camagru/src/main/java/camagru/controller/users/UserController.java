@@ -37,21 +37,9 @@ public class UserController {
         return (userRepository.getAll());
     }
 
-    @PostMapping(path = "/getId", consumes = "application/json", produces = "application/json")
+    @PostMapping(path = "/login", consumes = "application/json", produces = "application/json")
     public HashMap<String, Object> login(@RequestBody User user) {
-        int id;
-
-        HashMap <String, Object> response = new HashMap<String, Object>();
-        id = userRepository.getUserId(user);
-        //Got the id.  I want to return a flexible Map to return an error or user info.
-        if (id < 1) {
-            response.put("data","Invalid login, please try again or register");
-        } else {
-            response.put("data", user);
-            //response.setResponse(Integer.toString(id));
-
-        }
-        return (response);
+        return (userRepository.authenticate(user.getEmail(), user.getPassword()));
     }
 
     @PostMapping(path = "/create", consumes = "application/json", produces = "application/json")

@@ -22,7 +22,7 @@ class App extends React.Component {
   login = (username, pass) => {
     // backend
     // check to see if credentials match
-    fetch(`${APIUrl}/users/getId`, {
+    fetch(`${APIUrl}/users/login`, {
       method: 'post',
       headers: {
 				'Origin': baseURL,
@@ -30,10 +30,19 @@ class App extends React.Component {
 				'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        email: username
+        email: username,
+        password: pass
       })
     }).then(res => res.json())
-    .then(data => console.log(data));
+    .then(data => {
+      if (typeof(data.data.id) !== 'undefined') {
+        this.setState({
+          user: data.data
+        })
+      } else {
+        alert(data.data);
+      }
+    });
 
     if (false) {
       this.setState({
@@ -44,7 +53,7 @@ class App extends React.Component {
 
   logout = (username, pass) => {
     this.setState({
-      user: ""
+      user: null
     });
   };
 

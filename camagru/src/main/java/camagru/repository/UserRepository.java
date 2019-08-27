@@ -48,6 +48,20 @@ public class UserRepository {
         return (-1);
     }
 
+    public HashMap<String, Object> authenticate(String email, String password) {
+        HashMap<String, Object> data;
+        List<Map<String, Object>> res;
+
+        data = new HashMap<String, Object>();
+        res = jdbcTemplate.queryForList("SELECT * FROM users WHERE email = ? AND password = ?;", email, password);
+        if (res.size() > 0) {
+            data.put("data", res.get(0));
+        } else {
+            data.put("data", "Invalid Login");
+        }
+        return (data);
+    }
+
     public Message createUser(User user) {
         Message msg = new Message();
 
