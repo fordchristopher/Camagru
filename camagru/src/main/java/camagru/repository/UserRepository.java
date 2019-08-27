@@ -39,12 +39,21 @@ public class UserRepository {
 
     public Message createUser(User user) {
         Message msg = new Message();
-        try {
-            jdbcTemplate.update("INSERT INTO users (`email`, `username`, `password`) VALUES (?, ?, ?);",
-                    user.getEmail(), user.getUsername(), user.getPassword());
-            msg.setResponse("Success");
-        } catch (Exception e) {
-            msg.setResponse("User Creation failed");
+        List<Map<String, Object>> res = new ArrayList<>();
+
+        res.addAll(jdbcTemplate.queryForList("SELECT id FROM users WHERE email = ?;", user.getEmail()));
+        if (res.size() > 0) {
+            msg.setResponse("Duplicate email address, please enter a new email.");
+            return (msg);
+        }
+        else {
+            try {
+                jdbcTemplate.update("INSERT INTO users (`email`, `username`, `password`) VALUES (?, ?, ?);",
+                        user.getEmail(), user.getUsername(), user.getPassword());
+                msg.setResponse("Success, an email has been sent to " + user.getEmail() + "for confirmation.");
+            } catch (Exception e) {
+                msg.setResponse("User Creation failed");
+            }
         }
         return (msg);
     }

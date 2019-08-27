@@ -38,31 +38,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/create", consumes = "application/json", produces = "application/json")
-    public Message createUser(@RequestParam("username") String username,
-                               @RequestParam("email") String email,
-                               @RequestParam("password") String password) {
-            this.user = new User();
-            user.setEmail(email);
-            user.setPassword(password);
-            user.setUsername(username);
-            user.setActive(0);
-            user.setReceiveNotifications(1);
-            System.out.println("Into the API!");
-            return (userRepository.createUser(user));
-    }
-
-    @PostMapping(path = "/test", consumes = "application/json", produces = "application/json")
     public Message testit(@RequestBody User user) {
         return (userRepository.createUser(user));
     }
-
-//
-/*    @GetMapping("/create")
-    public Message createUser(@RequestParam Map<String, String> req) {
-        this.user = new User(req.get("email"), req.get("username"), req.get("password"), (byte)0, (byte)1);
-        this.response = new Message();
-        this.response.setResponse("User created");
-        return (this.response);
-    }
- */
 }
