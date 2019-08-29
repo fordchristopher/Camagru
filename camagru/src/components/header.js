@@ -1,5 +1,5 @@
 import React from "react";
-import { baseURL } from "../global.js";
+import { Link } from "react-router-dom"
 import "./header.css";
 import home from "./pictures/home.png";
 import settings from "./pictures/account.png";
@@ -10,19 +10,19 @@ const Header = props => {
     return (
       <div className="container-head">
         <div className="container-icon">
-          <a href={`${baseURL}/home`}>
+          <Link to={`/home`} >
             <img src={home} className="icon" alt="home" />
-          </a>
+          </Link>
         </div>
         <div className="container-icon small-top-margin">
-          <a href={`${baseURL}/`}>
+          <Link to={`/`}>
             <img src={settings} className="icon" alt="home" />
-          </a>
+          </Link>
         </div>
         <div className="container-icon top-margin">
-          <a href={`${baseURL}/create`}>
+          <Link to={`/create`}>
             <img src={camera} className="icon" alt="home" />
-          </a>
+          </Link>
         </div>
         <h1
           onClick={props.showme}
@@ -36,14 +36,14 @@ const Header = props => {
     return (
       <div className="container-head">
         <div className="container-icon">
-          <a href={`${baseURL}/home`}>
+          <Link to={`/home`}>
             <img src={home} className="icon" alt="home" />
-          </a>
+          </Link>
         </div>
         <div className="container-icon small-top-margin">
-          <a href={`${baseURL}/`}>
+          <Link to={`/`}>
             <img src={settings} className="icon" alt="home" />
-          </a>
+          </Link>
         </div>
         <h1
           onClick={props.showme}

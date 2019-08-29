@@ -9,6 +9,7 @@ class Post extends React.Component {
 			post: null,
 			comment: null
 		}
+		this.likePost = this.likePost.bind(this);
 	}
 
 	showModal = () => {
@@ -31,6 +32,10 @@ class Post extends React.Component {
 		document.querySelector(".comment-entry").value = "";
 	}
 
+	likePost = (postId, userId) => {
+
+	}
+
 	render() {
 		return(
 			<div className="postContainer">
@@ -43,29 +48,14 @@ class Post extends React.Component {
 						<button type="button" onClick={this.submitComment}>Submit</button>
 					</div>
 				</div>
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
-			<Content showModal={this.showModal} closeModal={this.closeModal} />
+				<Content
+					showModal={this.showModal}
+					closeModal={this.closeModal}
+					likePost={this.likePost}
+					user={this.props.user}
+					//Need to pass in posts from a map function.  I was wokring on the like button functionality
+					//But i am thinking that it will be easier once I render out the posts
+				/>
 			</div>
 		);
 	}

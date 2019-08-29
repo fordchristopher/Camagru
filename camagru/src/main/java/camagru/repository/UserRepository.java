@@ -62,6 +62,39 @@ public class UserRepository {
         return (data);
     }
 
+    public Message updateEmail(User user) {
+        Message msg = new Message();
+        try {
+            jdbcTemplate.update("UPDATE users SET email = ? WHERE id = ?;", user.getEmail(), user.getId());
+            msg.setResponse("Email address updated!");
+        } catch (Exception e) {
+            msg.setResponse("Email address update failed");
+        }
+        return (msg);
+    }
+
+    public Message updateUsername(User user) {
+        Message msg = new Message();
+        try {
+            jdbcTemplate.update("UPDATE users SET username = ? WHERE id = ?;", user.getUsername(), user.getId());
+            msg.setResponse("Username updated!");
+        } catch (Exception e) {
+            msg.setResponse("Username update failed");
+        }
+        return (msg);
+    }
+
+    public Message updatePassword(User user) {
+        Message msg = new Message();
+        try {
+            jdbcTemplate.update("UPDATE users SET password = ? WHERE id = ?;", user.getPassword(), user.getId());
+            msg.setResponse("Password updated!");
+        } catch (Exception e) {
+            msg.setResponse("Password update failed");
+        }
+        return (msg);
+    }
+
     public Message createUser(User user) {
         Message msg = new Message();
 

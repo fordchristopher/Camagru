@@ -2,41 +2,31 @@ package camagru;
 
 public class Post {
     private int id;
-    private int user_id;
+    private int userId;
     private String photo;
-    private String description;
-    private String title;
     private String date;
-
-    Post(int user_id, String photo, String description, String title, String date) {
-        this.user_id = user_id;
-        this.photo = photo;
-        this.description = description;
-        this.title = title;
-        this.date = date;
-    }
 
     public int getId() {
         return (this.id);
     }
 
     public int getUserId() {
-        return (this.user_id);
+        return (this.userId);
     }
 
     public String getPhoto() {
         return (this.photo);
     }
 
-    public String getDescription() {
-        return (this.description);
-    }
-
-    public String getTitle() {
-        return (this.title);
-    }
-
     public String getDate() {
         return (this.date);
     }
+
+    public void setId(int id) { this.id = id; }
+
+    public void setUserId(int id) { this.userId = id; }
+
+    public void setPhoto (String photo) { this.photo = photo; }
+
+    public void setDate(String date) { this.date = date; }
 }

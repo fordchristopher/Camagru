@@ -2,7 +2,6 @@ package camagru.controller.users;
 
 import camagru.Message;
 import camagru.User;
-import camagru.UserInfo;
 import camagru.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +42,22 @@ public class UserController {
     }
 
     @PostMapping(path = "/create", consumes = "application/json", produces = "application/json")
-    public Message testit(@RequestBody User user) {
+    public Message create(@RequestBody User user) {
         return (userRepository.createUser(user));
+    }
+
+    @PostMapping(path = "/updateEmail", consumes = "application/json", produces = "application/json")
+    public Message updateEmail(@RequestBody User user) {
+        return (userRepository.updateEmail(user));
+    }
+
+    @PostMapping(path = "/updateUsername", consumes = "application/json", produces = "application/json")
+    public Message updateUsername(@RequestBody User user) {
+        return (userRepository.updateUsername(user));
+    }
+
+    @PostMapping(path = "/updatePassword", consumes = "application/json", produces = "application/json")
+    public Message updatePassword(@RequestBody User user) {
+        return (userRepository.updatePassword(user));
     }
 }

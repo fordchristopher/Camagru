@@ -3,7 +3,7 @@ import Fish from "./pictures/fish.png";
 import Cracks from "./pictures/cracks_burned.png";
 import Hello from "./pictures/Hello.png";
 import Sidebar from "./sidebar.js";
-import { APIUrl } from '../global.js';
+import { APIUrl, baseURL } from '../global.js';
 import "./studio.css";
 
 class Stream extends React.Component {
@@ -13,7 +13,6 @@ class Stream extends React.Component {
       prop: null,
       photoTaken: false,
       photoURL: null,
-      response: null
     };
   }
   componentDidMount() {
@@ -69,21 +68,23 @@ class Stream extends React.Component {
   };
 
   postPhoto = () => {
+    console.log(this.state.photoURL.split(",")[1]); 
+    ///Maybe need to remove the prefix
     fetch(`${APIUrl}/posts/add`, {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: {
-        photo: this.state.photoURL,
-        //id: this.props.user.id,
-        id: 11
-      }
-    })
-      .then(res => this.setState({ response: res.json() }))
-      //Is this 'data.response' or 'data.message'?
-      .then(alert(this.state.response));
+				method: 'post',
+				headers: {
+					'Origin': baseURL,
+					'Access-Control-Request-Method': 'POST',
+					'Content-Type': 'application/json'
+        },
+        mode: 'cors',
+				body: JSON.stringify({
+          photo: this.state.photoURL.split(",")[1],
+          id: 11
+				})
+			})
+      .then(res => res.json())
+      .then(data => alert(data.response));
 };
 
   acceptUpload = () => {

@@ -20,8 +20,6 @@ class App extends React.Component {
   }
 
   login = (username, pass) => {
-    // backend
-    // check to see if credentials match
     fetch(`${APIUrl}/users/login`, {
       method: 'post',
       headers: {
@@ -43,12 +41,6 @@ class App extends React.Component {
         alert(data.data);
       }
     });
-
-    if (false) {
-      this.setState({
-        user: username
-      });
-    } //else this.logout();
   };
 
   logout = (username, pass) => {
@@ -65,19 +57,20 @@ class App extends React.Component {
     return (
       <div className="App">
         <BrowserRouter>
-          <Header showme={this.showme} />
+          <Header showme={this.showme} user={this.state.user} />
           <Route
-            path="/"
-            render={() => <Account user={this.state.user} login={this.login} />}
+            path="/changebacktoblank"
+            render={() => <Account user={this.state.user} login={this.login} logout={this.logout} />}
             exact
           />
           <Route
-            path="/create"
+            path="/"
+            //change back to 'create'
             render={() => <Stream user={this.state.user} />}
           />
           <Route
             path="/home"
-            render={() => <Post />}
+            render={() => <Post user={this.state.user}/>}
           />
           <Footer user={this.state.user} logout={this.logout} />
         </BrowserRouter>
