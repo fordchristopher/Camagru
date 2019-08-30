@@ -56,7 +56,9 @@ class Login extends React.Component {
 				password: this.state.new_pass
 			})
 		}
-		fetch(`${APIUrl}/users/create`, data);
+		fetch(`${APIUrl}/users/create`, data)
+		.then(response => response.json())
+		.then(data => console.log(data.response));
 	}
 
 	render() {

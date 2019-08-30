@@ -36,6 +36,11 @@ public class UserController {
         return (userRepository.getAll());
     }
 
+    @GetMapping("/confirm/")
+    public Message confirmRegister(@RequestParam String key) {
+        return (userRepository.confirmRegister(key));
+    }
+
     @PostMapping(path = "/login", consumes = "application/json", produces = "application/json")
     public HashMap<String, Object> login(@RequestBody User user) {
         return (userRepository.authenticate(user.getEmail(), user.getPassword()));

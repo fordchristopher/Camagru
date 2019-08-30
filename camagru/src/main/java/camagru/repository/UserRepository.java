@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -97,7 +98,40 @@ public class UserRepository {
         return (msg);
     }
 
+    public String genRandomStr() {
+        int character;
+        int length = 35;
+        String base = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder builder = new StringBuilder(length);
+        while (length-- > 0) {
+            character = (int)(Math.random()*base.length());
+            builder.append(base.charAt(character));
+        }
+        return builder.toString();
+    }
+
+    public int getNextId(String table) {
+        List<Map <String, Object>> res;
+        BigInteger id;
+
+        res = jdbcTemplate.queryForList("SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_name = ? and table_schema = database();", table);
+        id = (BigInteger) res.get(0).get("AUTO_INCREMENT");
+        return(id.intValue());
+    }
+
+    public Message confirmRegister(String key) {
+        List<Map<String, Object>> res;
+        int id;
+
+        res = jdbcTemplate.queryForList("SELECT userId FROM unique_urls WHERE url = ?;", key);
+        if (res.size() > 0) {
+            //trying to get the id of the url so I can mark is as active in the users table
+            id = res.get(0).get("id");
+        }
+    }
+
     public Message createUser(User user) {
+        String url;
         Message msg = new Message();
         MailUtil util = new MailUtil();
         EmailContent content = new EmailContent();
@@ -108,12 +142,16 @@ public class UserRepository {
         }
         else {
             try {
-                content.setBody("Thanks for signing up with us");
+
                 content.setRecipient(user.getEmail());
                 content.setSubject("Camagru new account confirmation");
                 jdbcTemplate.update("INSERT INTO users (`email`, `username`, `password`) VALUES (?, ?, ?);",
                         user.getEmail(), user.getUsername(), user.getPassword());
-                util.sendMail(content);
+                url = genRandomStr();
+                user.setId(getNextId("users"));
+                jdbcTemplate.update("INSERT INTO unique_urls (userId, url, reason) VALUES (?, ?, 'registration');", user.getId(), url);
+                content.setBody("Thanks for signing up with us. Here is the link to activate your account: http://localhost:8080/users/confirm/key=" + url);
+                //util.sendMail(content);
                 msg.setResponse("Success, an email has been sent to " + user.getEmail() + "for confirmation.");
             } catch (Exception e) {
                 msg.setResponse("User Creation failed");
