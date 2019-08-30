@@ -59,12 +59,12 @@ class App extends React.Component {
         <BrowserRouter>
           <Header showme={this.showme} user={this.state.user} />
           <Route
-            path="/changebacktoblank"
+            path="/"
             render={() => <Account user={this.state.user} login={this.login} logout={this.logout} />}
             exact
           />
           <Route
-            path="/"
+            path="/create"
             //change back to 'create'
             render={() => <Stream user={this.state.user} />}
           />

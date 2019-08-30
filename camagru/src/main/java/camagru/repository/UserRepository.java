@@ -1,5 +1,7 @@
 package camagru.repository;
 
+import camagru.EmailContent;
+import camagru.MailUtil;
 import camagru.Message;
 import camagru.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +99,8 @@ public class UserRepository {
 
     public Message createUser(User user) {
         Message msg = new Message();
+        MailUtil util = new MailUtil();
+        EmailContent content = new EmailContent();
 
         if (this.getUserId(user) > 0) {
             msg.setResponse("Duplicate email address, please enter a new email.");
@@ -104,8 +108,12 @@ public class UserRepository {
         }
         else {
             try {
+                content.setBody("Thanks for signing up with us");
+                content.setRecipient(user.getEmail());
+                content.setSubject("Camagru new account confirmation");
                 jdbcTemplate.update("INSERT INTO users (`email`, `username`, `password`) VALUES (?, ?, ?);",
                         user.getEmail(), user.getUsername(), user.getPassword());
+                util.sendMail(content);
                 msg.setResponse("Success, an email has been sent to " + user.getEmail() + "for confirmation.");
             } catch (Exception e) {
                 msg.setResponse("User Creation failed");

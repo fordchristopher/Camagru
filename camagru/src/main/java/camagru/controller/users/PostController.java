@@ -25,8 +25,7 @@ public class PostController {
 
     @PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
     public Message add(@RequestBody Post post) {
-        System.out.println("The id is:");
-        System.out.println(post.getId());
+        post.setId(postRepository.getNextId("posts"));
         return (postRepository.addPost(post));
     }
 }

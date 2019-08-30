@@ -68,8 +68,6 @@ class Stream extends React.Component {
   };
 
   postPhoto = () => {
-    console.log(this.state.photoURL.split(",")[1]); 
-    ///Maybe need to remove the prefix
     fetch(`${APIUrl}/posts/add`, {
 				method: 'post',
 				headers: {
@@ -80,7 +78,7 @@ class Stream extends React.Component {
         mode: 'cors',
 				body: JSON.stringify({
           photo: this.state.photoURL.split(",")[1],
-          id: 11
+          userId: 11
 				})
 			})
       .then(res => res.json())

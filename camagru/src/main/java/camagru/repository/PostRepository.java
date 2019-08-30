@@ -11,7 +11,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.File;
+import java.math.BigInteger;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +26,7 @@ public class PostRepository {
 
     public List<Map<String, Object>> getAllPosts() {
         List<Map<String, Object>> res;
-        res = jdbcTemplate.queryForList("SELECT * FROM posts ORDER BY `date` DESC;");
+        res = jdbcTemplate.queryForList("SELECT * FROM posts ORDER BY `timestamp` DESC;");
         return (res);
     }
 
@@ -39,13 +41,23 @@ public class PostRepository {
         ImageIO.write(imageData, "png", imageFile);
     }
 
+    public int getNextId(String table) {
+        List<Map <String, Object>> res;
+        BigInteger id;
+
+        res = jdbcTemplate.queryForList("SELECT AUTO_INCREMENT FROM information_schema.tables WHERE table_name = ? and table_schema = database();", table);
+        id = (BigInteger) res.get(0).get("AUTO_INCREMENT");
+        return(id.intValue());
+    }
+
     public Message addPost(Post post) {
         String base64URL = post.getPhoto();
         Message response = new Message();
         try {
             byte[] array = convertToImg(base64URL);
-            writeBytesToImg(array, "test.png");
-            response.setResponse("Success");
+            writeBytesToImg(array, "userPhotos/" + Integer.toString(post.getId()) + ".png");
+            jdbcTemplate.update("INSERT INTO posts (id, userId) VALUES (?, ?);", post.getId(), post.getUserId());
+            response.setResponse("Photo Successfully added");
         } catch (IOException e) {
             e.printStackTrace();
             response.setResponse("Failed");
