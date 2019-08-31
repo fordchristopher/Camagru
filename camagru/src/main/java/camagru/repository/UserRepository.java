@@ -121,13 +121,24 @@ public class UserRepository {
 
     public Message confirmRegister(String key) {
         List<Map<String, Object>> res;
+        Message message = new Message();
+        String email;
         int id;
 
         res = jdbcTemplate.queryForList("SELECT userId FROM unique_urls WHERE url = ?;", key);
         if (res.size() > 0) {
-            //trying to get the id of the url so I can mark is as active in the users table
-            id = res.get(0).get("id");
+            id = (int) res.get(0).get("userId");
+            try {
+                jdbcTemplate.update("UPDATE users SET active = 1 WHERE id = ?;", id);
+                message.setResponse("User " + id + " activated");
+            } catch (Exception e) {
+                message.setResponse("User activation failed");
+            }
+            jdbcTemplate.update("DELETE FROM unique_urls WHERE url = ?;", key);
+        } else {
+            message.setResponse("User not found");
         }
+        return (message);
     }
 
     public Message createUser(User user) {
@@ -145,13 +156,13 @@ public class UserRepository {
 
                 content.setRecipient(user.getEmail());
                 content.setSubject("Camagru new account confirmation");
+                user.setId(getNextId("users"));
                 jdbcTemplate.update("INSERT INTO users (`email`, `username`, `password`) VALUES (?, ?, ?);",
                         user.getEmail(), user.getUsername(), user.getPassword());
                 url = genRandomStr();
-                user.setId(getNextId("users"));
                 jdbcTemplate.update("INSERT INTO unique_urls (userId, url, reason) VALUES (?, ?, 'registration');", user.getId(), url);
-                content.setBody("Thanks for signing up with us. Here is the link to activate your account: http://localhost:8080/users/confirm/key=" + url);
-                //util.sendMail(content);
+                content.setBody("Thanks for signing up with us. Here is the link to activate your account: http://localhost:8080/users/confirm?key=" + url);
+                util.sendMail(content);
                 msg.setResponse("Success, an email has been sent to " + user.getEmail() + "for confirmation.");
             } catch (Exception e) {
                 msg.setResponse("User Creation failed");

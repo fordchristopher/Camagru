@@ -36,7 +36,7 @@ public class UserController {
         return (userRepository.getAll());
     }
 
-    @GetMapping("/confirm/")
+    @GetMapping("/confirm")
     public Message confirmRegister(@RequestParam String key) {
         return (userRepository.confirmRegister(key));
     }

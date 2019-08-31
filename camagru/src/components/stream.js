@@ -78,7 +78,7 @@ class Stream extends React.Component {
         mode: 'cors',
 				body: JSON.stringify({
           photo: this.state.photoURL.split(",")[1],
-          userId: 11
+          userId: this.props.user.id
 				})
 			})
       .then(res => res.json())

@@ -19,6 +19,14 @@ class App extends React.Component {
     this.showme = this.showme.bind(this);
   }
 
+  componentDidMount() {
+    if (localStorage.getItem('user') !== null) {
+      this.setState({
+       user: localStorage.getItem('user')
+      });
+    } 
+  }
+
   login = (username, pass) => {
     fetch(`${APIUrl}/users/login`, {
       method: 'post',
@@ -36,6 +44,8 @@ class App extends React.Component {
       if (typeof(data.data.id) !== 'undefined') {
         this.setState({
           user: data.data
+        }, () => {
+          localStorage.setItem( 'user', data.data );
         })
       } else {
         alert(data.data);
@@ -47,6 +57,8 @@ class App extends React.Component {
     this.setState({
       user: null
     });
+    if (localStorage.getItem('user') !== null)
+      localStorage.removeItem('user');
   };
 
   showme = () => {
