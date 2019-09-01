@@ -84,7 +84,7 @@ class Post extends React.Component {
 			})
 		})
 		.then(response => response.json())
-		.then(data => alert(data.response));
+		.then(data => alert(data.response))
 		document.querySelector(".comment-entry").value = "";
 		window.location.reload();
 	}

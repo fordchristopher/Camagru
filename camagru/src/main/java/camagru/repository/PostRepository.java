@@ -35,18 +35,6 @@ public class PostRepository {
         return (res);
     }
 
-    public Message addComment(int postId, int userId, String content) {
-        Message message = new Message();
-        try {
-            jdbcTemplate.update("INSERT INTO `comments` (`userId`, `postId`, `content`) VALUES (?, ?, ?);", postId, userId, content);
-            message.setResponse("Comment added!");
-        } catch (Exception e) {
-            message.setResponse("Error adding comment");
-            e.printStackTrace();
-        }
-        return (message);
-    }
-
     public String getEmailByPostId (int postId) {
         List<Map<String, Object>> res;
 
@@ -65,6 +53,24 @@ public class PostRepository {
             return (String.valueOf(res.get(0).get("username")));
         }
         return ("");
+    }
+
+    public Message addComment(int userId, int postId, String content) {
+        Message message = new Message();
+        EmailContent emailContent = new EmailContent();
+        MailUtil util = new MailUtil();
+        try {
+            jdbcTemplate.update("INSERT INTO `comments` (`userId`, `postId`, `content`) VALUES (?, ?, ?);", userId, postId, content);
+            message.setResponse("Comment added!");
+            emailContent.setRecipient(getEmailByPostId(postId));
+            emailContent.setSubject("Someone commented on your photo!");
+            emailContent.setBody(getUserNameById(userId) + " says \"" + content + "\"");
+            util.sendMail(emailContent);
+        } catch (Exception e) {
+            message.setResponse("Error adding comment");
+            e.printStackTrace();
+        }
+        return (message);
     }
 
     public Message likePost(int userId, int postId) {
