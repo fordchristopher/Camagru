@@ -20,9 +20,9 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    if (localStorage.getItem('user') !== null) {
+    if (typeof localStorage.getItem('user') !== "undefined") {
       this.setState({
-       user: localStorage.getItem('user')
+       user: JSON.parse(localStorage.getItem('user'))
       });
     } 
   }
@@ -45,7 +45,7 @@ class App extends React.Component {
         this.setState({
           user: data.data
         }, () => {
-          localStorage.setItem( 'user', data.data );
+          localStorage.setItem( 'user', JSON.stringify(data.data));
         })
       } else {
         alert(data.data);

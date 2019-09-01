@@ -1,5 +1,7 @@
 package camagru.repository;
 
+import camagru.EmailContent;
+import camagru.MailUtil;
 import camagru.Message;
 import camagru.Post;
 import org.apache.commons.io.IOUtils;
@@ -45,8 +47,54 @@ public class PostRepository {
         return (message);
     }
 
+    public String getEmailByPostId (int postId) {
+        List<Map<String, Object>> res;
+
+        res = jdbcTemplate.queryForList("SELECT email FROM users WHERE id = (SELECT userId FROM posts WHERE id = ?);", postId);
+        if (res.size() > 0) {
+            return (String.valueOf(res.get(0).get("email")));
+        }
+        return ("");
+    }
+
+    public String getUserNameById (int userId) {
+        List<Map<String, Object>> res;
+
+        res = jdbcTemplate.queryForList("SELECT username FROM users WHERE id = ?;", userId);
+        if (res.size() > 0) {
+            return (String.valueOf(res.get(0).get("username")));
+        }
+        return ("");
+    }
+
+    public Message likePost(int userId, int postId) {
+        Message message = new Message();
+        List<Map<String, Object>> res;
+        EmailContent content = new EmailContent();
+        MailUtil util = new MailUtil();
+
+        res = jdbcTemplate.queryForList("SELECT * FROM likes WHERE userId = ? AND postId = ?;", userId, postId);
+        if (res.size() > 0)
+        {
+            message.setResponse("Already liked this post!");
+            return (message);
+        }
+        try {
+            jdbcTemplate.update("INSERT INTO `likes` (`userId`, `postId`) VALUES (?, ?);", userId, postId);
+            message.setResponse("Post liked!");
+            content.setRecipient(getEmailByPostId(postId));
+            content.setSubject("Someone liked your photo!");
+            content.setBody(getUserNameById(userId) + " has liked your post!");
+            util.sendMail(content);
+        } catch (Exception e) {
+            message.setResponse("Error liking post");
+            e.printStackTrace();
+        }
+        return (message);
+    }
+
     public byte[] convertToImg(String base64URL) throws IOException {
-        return (Base64.getDecoder().decode(base64URL.getBytes("UTF-8")));
+       return (Base64.getDecoder().decode(base64URL.getBytes("UTF-8")));
     }
 
     public List<Map<String, Object>> getComments(int postId) {

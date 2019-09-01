@@ -90,6 +90,7 @@ class Post extends React.Component {
 	}
 
 	likePost = (postId, userId) => {
+		console.log(postId);
 		fetch(`${APIUrl}/posts/likePost`, {
 			method: 'post',
 			headers: {
@@ -98,13 +99,17 @@ class Post extends React.Component {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
-				postId: this.state.postId,
-				userId: this.props.user.id,
+				postId: postId,
+				userId: userId
 			})
 		})
 		.then(response => response.json())
-		.then(data => alert(data.response));
-		window.location.reload();
+		.then(data => {
+			alert(data.response);
+			if (data.response === "Post liked!")
+				window.location.reload();
+		});
+		
 	}
 
 	render() {

@@ -20,7 +20,7 @@ const Content = (props) => {
 				{props.user &&
 				<>
 					<button type="button" onClick={() => props.showModal(props.postData.id)}>Comments ({props.postData.commentCount})</button>
-					<button onClick={props.likePost(props.postData.id, props.postData.user.id)} type="button">Like ({props.postData.likesCount})</button>
+					<button onClick={() => props.likePost(props.postData.id, props.user.id)} type="button">Like ({props.postData.likesCount})</button>
 				</>
 				}
 			</div>

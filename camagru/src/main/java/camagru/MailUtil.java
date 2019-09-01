@@ -23,9 +23,7 @@ public class MailUtil {
         Message message = prepareMessage(session, content);
         try {
             Transport.send(message);
-            System.out.println("Check your email");
         } catch (MessagingException e) {
-            System.out.println(":(");
             e.printStackTrace();
         }
     }

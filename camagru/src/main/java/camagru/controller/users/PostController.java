@@ -37,6 +37,11 @@ public class PostController {
 
     @PostMapping(path = "/addComment", consumes = "application/json", produces = "application/json")
     public Message addComment (@RequestBody Comment comment) {
-        return postRepository.addComment(comment.getUserId(), comment.getPostId(), comment.getContent());
+        return (postRepository.addComment(comment.getUserId(), comment.getPostId(), comment.getContent()));
+    }
+
+    @PostMapping(path = "/likePost", consumes = "application/json", produces = "application/json")
+    public Message likePost (@RequestBody Comment comment) {
+        return (postRepository.likePost(comment.getUserId(), comment.getPostId()));
     }
 }
