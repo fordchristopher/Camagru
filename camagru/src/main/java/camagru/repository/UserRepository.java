@@ -1,9 +1,6 @@
 package camagru.repository;
 
-import camagru.EmailContent;
-import camagru.MailUtil;
-import camagru.Message;
-import camagru.User;
+import camagru.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -51,12 +48,31 @@ public class UserRepository {
         return (-1);
     }
 
+    public String getSaltByEmail (String email) {
+        List<Map<String, Object>> res;
+        String salt;
+
+        res = jdbcTemplate.queryForList("SELECT salt FROM users WHERE email = ?;", email);
+        if (res.size() > 0) {
+            salt = String.valueOf(res.get(0).get("salt"));
+        } else {
+            salt = "";
+        }
+        return (salt);
+    }
+
     public HashMap<String, Object> authenticate(String email, String password) {
         HashMap<String, Object> data;
         List<Map<String, Object>> res;
+        String salt;
+        User user = new User();
 
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setSalt(getSaltByEmail(email));
+        String securePassword = PasswordUtils.generateSecurePassword(password, user.getSalt());
         data = new HashMap<String, Object>();
-        res = jdbcTemplate.queryForList("SELECT * FROM users WHERE email = ? AND password = ?;", email, password);
+        res = jdbcTemplate.queryForList("SELECT * FROM users WHERE email = ? AND password = ?;", user.getEmail(), securePassword);
         if (res.size() > 0) {
             data.put("data", res.get(0));
         } else {
@@ -146,6 +162,8 @@ public class UserRepository {
         Message msg = new Message();
         MailUtil util = new MailUtil();
         EmailContent content = new EmailContent();
+        user.setSalt(PasswordUtils.getSalt(30));
+        String securePassword = PasswordUtils.generateSecurePassword(user.getPassword(), user.getSalt());
 
         if (this.getUserId(user) > 0) {
             msg.setResponse("Duplicate email address, please enter a new email.");
@@ -157,14 +175,15 @@ public class UserRepository {
                 content.setRecipient(user.getEmail());
                 content.setSubject("Camagru new account confirmation");
                 user.setId(getNextId("users"));
-                jdbcTemplate.update("INSERT INTO users (`email`, `username`, `password`) VALUES (?, ?, ?);",
-                        user.getEmail(), user.getUsername(), user.getPassword());
+                jdbcTemplate.update("INSERT INTO users (`email`, `username`, `password`, `salt`) VALUES (?, ?, ?, ?);",
+                        user.getEmail(), user.getUsername(), securePassword, user.getSalt());
                 url = genRandomStr();
                 jdbcTemplate.update("INSERT INTO unique_urls (userId, url, reason) VALUES (?, ?, 'registration');", user.getId(), url);
                 content.setBody("Thanks for signing up with us. Here is the link to activate your account: http://localhost:8080/users/confirm?key=" + url);
                 util.sendMail(content);
                 msg.setResponse("Success, an email has been sent to " + user.getEmail() + "for confirmation.");
             } catch (Exception e) {
+                e.printStackTrace();
                 msg.setResponse("User Creation failed");
             }
         }

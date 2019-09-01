@@ -1,14 +1,25 @@
 package camagru;
 
 import java.util.Map;
+import org.apache.commons.codec.digest.Crypt;
 
 public class User {
     private int id;
     private String email;
     private String username;
     private String password;
+    private String salt;
     private int active;
     private int receive_notifications;
+
+    public String getSalt() {
+        return (this.salt);
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
     public int getId() {
         return (this.id);
     }
@@ -37,12 +48,8 @@ public class User {
 
     public void setUsername(String username) { this.username = username; }
 
-    public String hashIt(String str) {
-        return (str);
-    }
-
     public void setPassword(String password) {
-        this.password = this.hashIt(password);
+        this.password = password;
     }
 
     public void setActive(int active) { this.active = active; }
