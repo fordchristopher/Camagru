@@ -7,12 +7,13 @@ import { APIUrl, baseURL } from '../global.js';
 import "./studio.css";
 
 class Stream extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       prop: null,
       photoTaken: false,
       photoURL: null,
+      user: this.props.user
     };
   }
   componentDidMount() {
@@ -51,6 +52,12 @@ class Stream extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      user: nextProps.user
+    });
+  }
+
   applyProp = e => {
     if (this.state.prop !== e.target.id) {
       this.setState({
@@ -78,11 +85,16 @@ class Stream extends React.Component {
         mode: 'cors',
 				body: JSON.stringify({
           photo: this.state.photoURL.split(",")[1],
-          userId: this.props.user.id
+          userId: this.state.user.id
 				})
 			})
       .then(res => res.json())
-      .then(data => alert(data.response));
+      .then(data => alert(data.response))
+      window.setTimeout(() => {
+        this.setState({
+        photoTaken: false
+      });
+    }, 100);
 };
 
   acceptUpload = () => {
@@ -146,7 +158,7 @@ class Stream extends React.Component {
   render() {
     return (
       <>
-        <Sidebar user={this.props.user}/>
+        <Sidebar user={this.state.user}/>
         <div className="container-studio">
           <h1 className="text-secondary">Welcome to the studio!</h1>
           <div className="container-props">

@@ -32,7 +32,6 @@ public class UserController {
 
     @GetMapping("/getAll")
     public List<Map<String, Object>> getAll() {
-        System.out.println("Into the API!");
         return (userRepository.getAll());
     }
 
@@ -48,7 +47,6 @@ public class UserController {
 
     @PostMapping(path = "/forgot", consumes = "application/json", produces = "application/json")
     public void resetPassword(@RequestBody User user) {
-        System.out.println("In the controller");
         userRepository.resetPassword(user);
     }
 

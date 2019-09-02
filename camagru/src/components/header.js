@@ -6,7 +6,7 @@ import settings from "./pictures/account.png";
 import camera from "./pictures/camera.png";
 
 const Header = props => {
-  if (props.user) {
+  if (props.user !== null) {
     return (
       <div className="container-head">
         <div className="container-icon">

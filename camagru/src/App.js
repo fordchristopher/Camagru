@@ -12,7 +12,8 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      user: null
+      user: null,
+      userLoaded: false
     };
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);

@@ -1,9 +1,6 @@
 package camagru.repository;
 
-import camagru.EmailContent;
-import camagru.MailUtil;
-import camagru.Message;
-import camagru.Post;
+import camagru.*;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,7 +25,6 @@ public class PostRepository {
     public List<Map<String, Object>> getAllPosts() {
         List<Map<String, Object>> res;
         res = jdbcTemplate.queryForList("SELECT posts.id, users.id AS userId, posts.timestamp, users.username, IFNULL(c_count.commentCount, 0) AS commentCount, IFNULL(l_count.likesCount, 0) AS likesCount FROM posts INNER JOIN users ON posts.userId = users.id LEFT JOIN (SELECT postId, COUNT(postId) AS commentCount FROM comments GROUP BY postId) AS c_count ON c_count.postId = posts.id LEFT JOIN (SELECT postId, COUNT(postId) AS likesCount FROM likes GROUP BY postId) AS l_count ON l_count.postId = posts.id WHERE users.active = 1 ORDER BY posts.timestamp DESC;");
-        System.out.println(System.getProperty("user.dir"));
         for (Map<String, Object> result : res) {
             result.put("url", imageToBytes("userPhotos/" + result.get("id") + ".png"));
         }
@@ -73,10 +69,23 @@ public class PostRepository {
         return (message);
     }
 
-    public List<Map<String, Object>> getAllByUserId(int userId) {
+    public boolean authenticateUser(User user) {
         List<Map<String, Object>> res;
 
-        res = jdbcTemplate.queryForList("SELECT * FROM posts WHERE userId = ? ORDER BY `timestamp` DESC;", userId);
+        res = jdbcTemplate.queryForList("SELECT * FROM users WHERE id = ? AND email = ? AND `password` = ?;", user.getId(), user.getEmail(), user.getPassword());
+        return (res.size() > 0);
+    }
+
+    public void deletePost(User user, int postId) {
+        if (authenticateUser(user)) {
+            jdbcTemplate.update("DELETE FROM posts WHERE id = ?;", postId);
+        }
+    }
+
+    public List<Map<String, Object>> getAllByUserId(int userId, int page) {
+        List<Map<String, Object>> res;
+
+        res = jdbcTemplate.queryForList("SELECT * FROM posts WHERE userId = ? ORDER BY `timestamp` DESC LIMIT ?, 5;", userId, page * 5 - 5);
         for (Map<String, Object> result : res) {
             result.put("url", imageToBytes("userPhotos/" + result.get("id") + ".png"));
         }

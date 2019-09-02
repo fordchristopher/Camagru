@@ -74,7 +74,6 @@ public class UserRepository {
         data = new HashMap<String, Object>();
         res = jdbcTemplate.queryForList("SELECT * FROM users WHERE email = ? AND password = ?;", user.getEmail(), securePassword);
         if (res.size() > 0) {
-            System.out.println(res.get(0).get("active"));
             if ((int) res.get(0).get("active") == 0) {
                 data.put("data", "Please activate your account. Check your email");
             } else {
@@ -127,13 +126,8 @@ public class UserRepository {
         List<Map<String, Object>> res;
         MailUtil util = new MailUtil();
         EmailContent content = new EmailContent();
-//
-        System.out.println("In the function at least");
-        System.out.println("The provided email address is " + user.getEmail());
-        //
         res = jdbcTemplate.queryForList("SELECT * FROM users where email = ?;", user.getEmail());
         if (res.size() > 0) {
-            System.out.println("There is at least one result");
             String random = genRandomStr();
             user.setPassword(random);
             user.setSalt(PasswordUtils.getSalt(30));
