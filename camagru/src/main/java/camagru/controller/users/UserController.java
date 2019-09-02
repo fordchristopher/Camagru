@@ -46,6 +46,12 @@ public class UserController {
         return (userRepository.authenticate(user.getEmail(), user.getPassword()));
     }
 
+    @PostMapping(path = "/forgot", consumes = "application/json", produces = "application/json")
+    public void resetPassword(@RequestBody User user) {
+        System.out.println("In the controller");
+        userRepository.resetPassword(user);
+    }
+
     @PostMapping(path = "/create", consumes = "application/json", produces = "application/json")
     public Message create(@RequestBody User user) {
         return (userRepository.createUser(user));

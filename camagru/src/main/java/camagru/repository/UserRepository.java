@@ -74,7 +74,12 @@ public class UserRepository {
         data = new HashMap<String, Object>();
         res = jdbcTemplate.queryForList("SELECT * FROM users WHERE email = ? AND password = ?;", user.getEmail(), securePassword);
         if (res.size() > 0) {
-            data.put("data", res.get(0));
+            System.out.println(res.get(0).get("active"));
+            if ((int) res.get(0).get("active") == 0) {
+                data.put("data", "Please activate your account. Check your email");
+            } else {
+                data.put("data", res.get(0));
+            }
         } else {
             data.put("data", "Invalid Login");
         }
@@ -105,13 +110,44 @@ public class UserRepository {
 
     public Message updatePassword(User user) {
         Message msg = new Message();
+
         try {
-            jdbcTemplate.update("UPDATE users SET password = ? WHERE id = ?;", user.getPassword(), user.getId());
+            user.setSalt(PasswordUtils.getSalt(30));
+            String securePassword = PasswordUtils.generateSecurePassword(user.getPassword(), user.getSalt());
+            jdbcTemplate.update("UPDATE users SET password = ?, salt = ? WHERE id = ?;", securePassword, user.getSalt(), user.getId());
             msg.setResponse("Password updated!");
         } catch (Exception e) {
             msg.setResponse("Password update failed");
+            e.printStackTrace();
         }
         return (msg);
+    }
+
+    public void resetPassword(User user) {
+        List<Map<String, Object>> res;
+        MailUtil util = new MailUtil();
+        EmailContent content = new EmailContent();
+//
+        System.out.println("In the function at least");
+        System.out.println("The provided email address is " + user.getEmail());
+        //
+        res = jdbcTemplate.queryForList("SELECT * FROM users where email = ?;", user.getEmail());
+        if (res.size() > 0) {
+            System.out.println("There is at least one result");
+            String random = genRandomStr();
+            user.setPassword(random);
+            user.setSalt(PasswordUtils.getSalt(30));
+            String securePassword = PasswordUtils.generateSecurePassword(user.getPassword(), user.getSalt());
+            try {
+                jdbcTemplate.update("UPDATE users SET password = ?, salt = ? WHERE email = ?;", securePassword, user.getSalt(), user.getEmail());
+                content.setRecipient(user.getEmail());
+                content.setSubject("Forgotten password request");
+                content.setBody("Hello, a forgotten password request has been sent for this email address.  Please use the following password to sign in and you can change your password upon successful login: " + random);
+                util.sendMail(content);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public String genRandomStr() {

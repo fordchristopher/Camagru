@@ -146,7 +146,7 @@ class Stream extends React.Component {
   render() {
     return (
       <>
-        <Sidebar />
+        <Sidebar user={this.props.user}/>
         <div className="container-studio">
           <h1 className="text-secondary">Welcome to the studio!</h1>
           <div className="container-props">

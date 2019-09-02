@@ -26,8 +26,21 @@ class Login extends React.Component {
 	forgotPassword = () => {
 		let email = window.prompt("Please enter your email address");
 		//Need to validate the email address
-		if (email !== "")
+		if (email !== null && email.length > 6)
+		{
+			fetch(`${APIUrl}/users/forgot`, {
+				method: 'post',
+				headers: {
+						  'Origin': baseURL,
+						  'Access-Control-Request-Method': 'POST',
+						  'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+				  email: email
+				})
+			})
 			alert(`Instructions have been sent to ${email} if there is an account associated with it`);
+		}
 		else
 			alert("Please enter a valid email address");
 	}

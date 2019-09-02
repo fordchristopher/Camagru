@@ -35,6 +35,11 @@ public class PostController {
         return (postRepository.getComments(postId));
     }
 
+    @GetMapping("/getAllByUserId")
+    public List<Map<String, Object>> getAllByUserId(@RequestParam int userId) {
+        return (postRepository.getAllByUserId(userId));
+    }
+
     @PostMapping(path = "/addComment", consumes = "application/json", produces = "application/json")
     public Message addComment (@RequestBody Comment comment) {
         return (postRepository.addComment(comment.getUserId(), comment.getPostId(), comment.getContent()));

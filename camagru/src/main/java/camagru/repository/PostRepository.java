@@ -73,6 +73,16 @@ public class PostRepository {
         return (message);
     }
 
+    public List<Map<String, Object>> getAllByUserId(int userId) {
+        List<Map<String, Object>> res;
+
+        res = jdbcTemplate.queryForList("SELECT * FROM posts WHERE userId = ? ORDER BY `timestamp` DESC;", userId);
+        for (Map<String, Object> result : res) {
+            result.put("url", imageToBytes("userPhotos/" + result.get("id") + ".png"));
+        }
+        return (res);
+    }
+
     public Message likePost(int userId, int postId) {
         Message message = new Message();
         List<Map<String, Object>> res;
