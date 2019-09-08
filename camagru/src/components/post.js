@@ -12,7 +12,8 @@ class Post extends React.Component {
 			comments_loaded: false,
 			comments: null,
 			postId: -1,
-			comment: ""
+			comment: "",
+			pag: 0
 		}
 		this.likePost = this.likePost.bind(this);
 		this.setCommentId = this.setCommentId.bind(this);
@@ -24,7 +25,7 @@ class Post extends React.Component {
 	}
 
 	getPosts = () => {
-		fetch(`${APIUrl}/posts/getAll`)
+		fetch(`${APIUrl}/posts/getAll?pag=${this.state.pag}`)
 		.then(response => response.json())
 		.then(data => {
 			this.setState({
@@ -80,7 +81,8 @@ class Post extends React.Component {
 			body: JSON.stringify({
 				postId: this.state.postId,
 				userId: this.props.user.id,
-				content: this.state.comment
+				content: this.state.comment,
+				password: this.props.user.password
 			})
 		})
 		.then(response => response.json())
@@ -90,7 +92,6 @@ class Post extends React.Component {
 	}
 
 	likePost = (postId, userId) => {
-		console.log(postId);
 		fetch(`${APIUrl}/posts/likePost`, {
 			method: 'post',
 			headers: {
@@ -112,11 +113,57 @@ class Post extends React.Component {
 		
 	}
 
+	renderPosts = () => {
+		
+		if (this.state.posts.length > 0)
+		{
+		return (
+			this.state.posts.map(post => 
+				<Content
+				showModal={this.showModal}
+				closeModal={this.closeModal}
+				likePost={this.likePost}
+				user={this.props.user}
+				postData={post}
+				setCommentId={this.setCommentId}
+				key={post.id}
+				/>
+			)
+		);
+			} else {
+				return (
+					<p>No more posts! Check back later</p>
+				);
+			}
+	}
+
+	incrementPag = () => {
+		this.setState({
+			pag: this.state.pag + 1
+		}, () => {
+			this.getPosts();
+		});
+	}
+
+	renderPagination = () => {
+		if (this.state.pag === 0)
+		{
+			return (
+				<button type="button" onClick={this.incrementPag}>Enable Pagination</button>
+			)
+		} else {
+			return (
+				<button type="button" onClick={this.incrementPag}>Next Page</button>
+			)
+		}
+	}
+
 	render() {
 		if (this.state.posts_loaded)
 		{
 			return (
 				<div className="postContainer">
+					{this.renderPagination()}
 					<div id="myModal" className="modal">
 						<div className="modal-content">
 							<span className="close" onClick={this.closeModal}>&times;</span>
@@ -134,19 +181,8 @@ class Post extends React.Component {
 							}
 						</div>
 					</div>
-					{
-						this.state.posts.map(post => 
-							<Content
-							showModal={this.showModal}
-							closeModal={this.closeModal}
-							likePost={this.likePost}
-							user={this.props.user}
-							postData={post}
-							setCommentId={this.setCommentId}
-							key={post.id}
-							/>
-						)
-					}
+					{this.renderPosts()}
+					{this.renderPagination()}
 				</div>
 			);
 		}

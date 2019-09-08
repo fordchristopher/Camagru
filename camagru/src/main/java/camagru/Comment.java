@@ -4,6 +4,11 @@ public class Comment {
     int userId;
     int postId;
     String content;
+    String password;
+
+    public void setPassword(String pass) { this.password = pass; }
+
+    public String getPassword() { return (this.password); }
 
     public void setUserId(int id) {
         this.userId = id;

@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
+import java.rmi.MarshalException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -85,13 +86,24 @@ public class UserRepository {
         return (data);
     }
 
+    public boolean emailExists(String email) {
+        List<Map<String, Object>> res;
+
+        res = jdbcTemplate.queryForList("SELECT * FROM users WHERE email = ?", email);
+        return (res.size() > 0);
+    }
+
     public Message updateEmail(User user) {
         Message msg = new Message();
-        try {
-            jdbcTemplate.update("UPDATE users SET email = ? WHERE id = ?;", user.getEmail(), user.getId());
-            msg.setResponse("Email address updated!");
-        } catch (Exception e) {
-            msg.setResponse("Email address update failed");
+        if (emailExists(user.getEmail()) == false) {
+            try {
+                jdbcTemplate.update("UPDATE users SET email = ? WHERE id = ? AND password = ?;", user.getEmail(), user.getId(), user.getPassword());
+                msg.setResponse("Email address updated!");
+            } catch (Exception e) {
+                msg.setResponse("Email address update failed");
+            }
+        } else {
+            msg.setResponse("Email address already exists");
         }
         return (msg);
     }
@@ -99,7 +111,7 @@ public class UserRepository {
     public Message updateUsername(User user) {
         Message msg = new Message();
         try {
-            jdbcTemplate.update("UPDATE users SET username = ? WHERE id = ?;", user.getUsername(), user.getId());
+            jdbcTemplate.update("UPDATE users SET username = ? WHERE id = ? AND password = ?;", user.getUsername(), user.getId(), user.getPassword());
             msg.setResponse("Username updated!");
         } catch (Exception e) {
             msg.setResponse("Username update failed");
@@ -107,17 +119,24 @@ public class UserRepository {
         return (msg);
     }
 
-    public Message updatePassword(User user) {
+    public Message updatePassword(User user, String oldPass) {
         Message msg = new Message();
+        List<Map<String, Object>> res;
 
-        try {
-            user.setSalt(PasswordUtils.getSalt(30));
-            String securePassword = PasswordUtils.generateSecurePassword(user.getPassword(), user.getSalt());
-            jdbcTemplate.update("UPDATE users SET password = ?, salt = ? WHERE id = ?;", securePassword, user.getSalt(), user.getId());
-            msg.setResponse("Password updated!");
-        } catch (Exception e) {
-            msg.setResponse("Password update failed");
-            e.printStackTrace();
+        res = jdbcTemplate.queryForList("SELECT * FROM users WHERE id = ? AND password = ?;", user.getId(), oldPass);
+        if (res.size() > 0)
+        {
+            try {
+                user.setSalt(PasswordUtils.getSalt(30));
+                String securePassword = PasswordUtils.generateSecurePassword(user.getPassword(), user.getSalt());
+                jdbcTemplate.update("UPDATE users SET password = ?, salt = ? WHERE id = ?;", securePassword, user.getSalt(), user.getId());
+                msg.setResponse("Password updated!");
+            } catch (Exception e) {
+                msg.setResponse("Password update failed");
+                e.printStackTrace();
+            }
+        } else {
+            msg.setResponse("Authenication failure");
         }
         return (msg);
     }
@@ -195,13 +214,17 @@ public class UserRepository {
         user.setSalt(PasswordUtils.getSalt(30));
         String securePassword = PasswordUtils.generateSecurePassword(user.getPassword(), user.getSalt());
 
+        if (MailUtil.isValid(user.getEmail()) == false)
+        {
+            msg.setResponse("Invalid Email address");
+            return (msg);
+        }
         if (this.getUserId(user) > 0) {
             msg.setResponse("Duplicate email address, please enter a new email.");
             return (msg);
         }
         else {
             try {
-
                 content.setRecipient(user.getEmail());
                 content.setSubject("Camagru new account confirmation");
                 user.setId(getNextId("users"));
@@ -218,5 +241,35 @@ public class UserRepository {
             }
         }
         return (msg);
+    }
+
+    public int get_notification_preference(User user) {
+        List<Map<String, Object>> res;
+
+        res = jdbcTemplate.queryForList("SELECT receive_notifications FROM users WHERE id = ? AND password = ?;", user.getId(), user.getPassword());
+        if (res.size() > 0)
+            return ((int) res.get(0).get("receive_notifications"));
+        return (-1);
+    }
+
+    public Message updateNotificationPreferences(User user) {
+        Message message = new Message();
+
+        int oldPreference = get_notification_preference(user);
+        if (oldPreference == -1)
+        {
+            message.setResponse("Update failed!");
+            return (message);
+        }
+        int newPreference = oldPreference == 1 ? 0 : 1;
+
+        try {
+            jdbcTemplate.update("UPDATE users set receive_notifications = ? WHERE id = ? AND password = ?;", newPreference, user.getId(), user.getPassword());
+            message.setResponse("Update confirmed!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            message.setResponse("Update failed!");
+        }
+        return (message);
     }
 }

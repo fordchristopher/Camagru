@@ -71,7 +71,7 @@ class Login extends React.Component {
 		}
 		fetch(`${APIUrl}/users/create`, data)
 		.then(response => response.json())
-		.then(data => console.log(data.response));
+		.then(data => alert(data.response));
 	}
 
 	render() {

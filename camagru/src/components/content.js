@@ -1,6 +1,5 @@
 import React from "react";
 import './content.css';
-import { APIUrl } from "../global";
 
 const Content = (props) => {
 	return (

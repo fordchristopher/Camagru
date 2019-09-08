@@ -21,14 +21,15 @@ public class PostController {
     private PostRepository postRepository;
 
     @GetMapping("/getAll")
-    public List<Map<String, Object>> getAll() {
-        return(postRepository.getAllPosts());
+    public List<Map<String, Object>> getAll(@RequestParam String pag) {
+        return(postRepository.getAllPosts(Integer.parseInt(pag)));
     }
 
     @PostMapping(path = "/add", consumes = "application/json", produces = "application/json")
     public Message add(@RequestBody Post post) {
+        int userId = post.getId();
         post.setId(postRepository.getNextId("posts"));
-        return (postRepository.addPost(post));
+        return (postRepository.addPost(post, userId));
     }
 
     @GetMapping("/getComments")
@@ -43,7 +44,7 @@ public class PostController {
 
     @PostMapping(path = "/addComment", consumes = "application/json", produces = "application/json")
     public Message addComment (@RequestBody Comment comment) {
-        return (postRepository.addComment(comment.getUserId(), comment.getPostId(), comment.getContent()));
+        return (postRepository.addComment(comment.getUserId(), comment.getPostId(), comment.getContent(), comment.getPassword()));
     }
 
     @PostMapping(path = "/deletePost", consumes = "application/json", produces = "application/json")

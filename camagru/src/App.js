@@ -42,7 +42,7 @@ class App extends React.Component {
       })
     }).then(res => res.json())
     .then(data => {
-      if (typeof(data.data.id) !== 'undefined') {
+      if (data.data && typeof(data.data.id) !== 'undefined') {
         this.setState({
           user: data.data
         }, () => {
@@ -54,12 +54,19 @@ class App extends React.Component {
     });
   };
 
+	updateUser = (newUser) => {
+		this.setState({
+			user : newUser
+		})
+	}
+
   logout = (username, pass) => {
     this.setState({
       user: null
     });
     if (localStorage.getItem('user') !== null)
       localStorage.removeItem('user');
+      window.location.href = `${baseURL}`
   };
 
   showme = () => {
@@ -73,13 +80,19 @@ class App extends React.Component {
           <Header showme={this.showme} user={this.state.user} />
           <Route
             path="/"
-            render={() => <Account user={this.state.user} login={this.login} logout={this.logout} />}
+            render={() => <Account user={this.state.user}
+            login={this.login}
+            logout={this.logout}
+            updateUser={this.updateUser} />}
             exact
           />
           <Route
             path="/create"
-            //change back to 'create'
             render={() => <Stream user={this.state.user} />}
+          />
+           <Route
+            path="/index"
+            render={() => {window.location.href=`${baseURL}`}}
           />
           <Route
             path="/home"

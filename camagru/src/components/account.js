@@ -12,6 +12,7 @@ class Account extends React.Component {
 			email: "",
 			password: "",
 			username: "",
+			reload: false
 		}
 	}
 
@@ -21,10 +22,61 @@ class Account extends React.Component {
 		});
 	}
 
+	toggleNotification = () => {
+		let temp = {};
+		temp = Object.assign(temp, this.props.user);
+		temp.receive_notifications = !temp.receive_notifications;
+		console.log(this.props.user);
+		this.props.updateUser(temp);
+
+		let newPreference;
+		if (this.props.receive_notifications === 1)
+			newPreference = 0;
+		else
+			newPreference = 1;
+
+		fetch(`${APIUrl}/users/updateNotificationPreference`, {
+			method: 'post',
+			headers: {
+				'Origin': baseURL,
+				'Access-Control-Request-Method': 'POST',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				id: this.props.user.id,
+				password: this.props.user.password,
+				receive_notifications: newPreference
+			})
+		})
+			.then(res => res.json())
+			.then(data => {
+				alert(data.response);
+			});
+			this.setState({
+				reload: !(this.state.reload)
+			})
+	}
+
+	renderButton = () => {
+		console.log(this.props.user);
+		if (this.props.user.receive_notifications)
+		{
+			return (
+				<button type="button" onClick={this.toggleNotification}>Turn off Email Notifications</button>
+			);
+		}
+		else
+		{
+			return (
+				<button type="button" onClick={this.toggleNotification}>Turn on Email Notifications</button>
+			);
+		}
+	}
+
 	editAccount = () => {
 		let logout = false;
 		if (this.state.email.length > 0) {
-			if (validateEmail(this.state.email) == false) {
+			if (validateEmail(this.state.email) === false) {
 				alert("Please enter a valid email address");
 			} else {
 				logout = true;
@@ -37,9 +89,12 @@ class Account extends React.Component {
 					},
 					body: JSON.stringify({
 						'email': this.state.email,
+						'password' : this.props.user.password,
 						'id': this.props.user.id
 					})
-				});
+				})
+				.then(response => response.json())
+				.then(data => alert(data.response));
 			}
 		}
 		if (this.state.username.length > 0) {
@@ -53,6 +108,7 @@ class Account extends React.Component {
 				},
 				body: JSON.stringify({
 					username: this.state.username,
+					password : this.props.user.password,
 					id: this.props.user.id
 				})
 			})
@@ -70,7 +126,8 @@ class Account extends React.Component {
 						'Content-Type': 'application/json'
 					},
 					body: JSON.stringify({
-						'password': this.state.password,
+						'new_password': this.state.password,
+						'old_password' : this.props.user.password,
 						'id': this.props.user.id
 					})
 				})
@@ -78,6 +135,12 @@ class Account extends React.Component {
 		}
 		if (logout)
 			this.props.logout();
+		this.setState({
+			email: "",
+			password: "",
+			username: "",
+			reload: false
+		});
 	}
 
 	render() {
@@ -94,6 +157,8 @@ class Account extends React.Component {
 							<input type="username" onChange={this.handleChange} className="form-control" name="username" placeholder="username" />
 							<br />
 							<button type='button' className="button-primary" onClick={this.editAccount}>Apply</button>
+							<br />
+							{this.renderButton()}
 						</form>
 					</div>
 				</div>

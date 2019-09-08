@@ -66,7 +66,18 @@ public class UserController {
     }
 
     @PostMapping(path = "/updatePassword", consumes = "application/json", produces = "application/json")
-    public Message updatePassword(@RequestBody User user) {
-        return (userRepository.updatePassword(user));
+    public Message updatePassword(@RequestBody Map<String, String> data) {
+        User user = new User();
+        String oldPass;
+
+        user.setPassword(data.get("new_password"));
+        user.setId(Integer.parseInt(data.get("id")));
+        oldPass = data.get("old_password");
+        return (userRepository.updatePassword(user, oldPass));
+    }
+
+    @PostMapping(path = "/updateNotificationPreference", consumes = "application/json", produces = "application/json")
+    public Message updateNotificationPreferennce(@RequestBody User user) {
+        return (userRepository.updateNotificationPreferences(user));
     }
 }

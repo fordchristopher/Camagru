@@ -22,9 +22,12 @@ public class PostRepository {
     private JdbcTemplate jdbcTemplate;
     private Post post;
 
-    public List<Map<String, Object>> getAllPosts() {
+    public List<Map<String, Object>> getAllPosts(int pag) {
         List<Map<String, Object>> res;
-        res = jdbcTemplate.queryForList("SELECT posts.id, users.id AS userId, posts.timestamp, users.username, IFNULL(c_count.commentCount, 0) AS commentCount, IFNULL(l_count.likesCount, 0) AS likesCount FROM posts INNER JOIN users ON posts.userId = users.id LEFT JOIN (SELECT postId, COUNT(postId) AS commentCount FROM comments GROUP BY postId) AS c_count ON c_count.postId = posts.id LEFT JOIN (SELECT postId, COUNT(postId) AS likesCount FROM likes GROUP BY postId) AS l_count ON l_count.postId = posts.id WHERE users.active = 1 ORDER BY posts.timestamp DESC;");
+        if (pag > 0)
+            res = jdbcTemplate.queryForList("SELECT posts.id, users.id AS userId, posts.timestamp, users.username, IFNULL(c_count.commentCount, 0) AS commentCount, IFNULL(l_count.likesCount, 0) AS likesCount FROM posts INNER JOIN users ON posts.userId = users.id LEFT JOIN (SELECT postId, COUNT(postId) AS commentCount FROM comments GROUP BY postId) AS c_count ON c_count.postId = posts.id LEFT JOIN (SELECT postId, COUNT(postId) AS likesCount FROM likes GROUP BY postId) AS l_count ON l_count.postId = posts.id WHERE users.active = 1 ORDER BY posts.timestamp DESC LIMIT ?, 5;",pag * 5 - 5);
+        else
+            res = jdbcTemplate.queryForList("SELECT posts.id, users.id AS userId, posts.timestamp, users.username, IFNULL(c_count.commentCount, 0) AS commentCount, IFNULL(l_count.likesCount, 0) AS likesCount FROM posts INNER JOIN users ON posts.userId = users.id LEFT JOIN (SELECT postId, COUNT(postId) AS commentCount FROM comments GROUP BY postId) AS c_count ON c_count.postId = posts.id LEFT JOIN (SELECT postId, COUNT(postId) AS likesCount FROM likes GROUP BY postId) AS l_count ON l_count.postId = posts.id WHERE users.active = 1 ORDER BY posts.timestamp DESC;");
         for (Map<String, Object> result : res) {
             result.put("url", imageToBytes("userPhotos/" + result.get("id") + ".png"));
         }
@@ -41,6 +44,16 @@ public class PostRepository {
         return ("");
     }
 
+    public int getIdByPostId (int postId) {
+        List<Map<String, Object>> res;
+
+        res = jdbcTemplate.queryForList("SELECT id FROM users WHERE id = (SELECT userId FROM posts WHERE id = ?);", postId);
+        if (res.size() > 0) {
+            return ((int) res.get(0).get("id"));
+        }
+        return (-1);
+    }
+
     public String getUserNameById (int userId) {
         List<Map<String, Object>> res;
 
@@ -51,17 +64,37 @@ public class PostRepository {
         return ("");
     }
 
-    public Message addComment(int userId, int postId, String content) {
+    private int authenticate(int userId, String password) {
+        List<Map<String, Object>> res;
+
+        res = jdbcTemplate.queryForList("SELECT * FROM users WHERE id = ? AND password = ?;", userId, password);
+        if (res.size() > 0)
+            return (1);
+        return (0);
+    }
+
+    //TEST
+    public Message addComment(int userId, int postId, String content, String password) {
         Message message = new Message();
         EmailContent emailContent = new EmailContent();
         MailUtil util = new MailUtil();
+
+        if (authenticate(userId, password) != 1)
+        {
+            message.setResponse("Invalid authentication!");
+            return (message);
+        }
         try {
             jdbcTemplate.update("INSERT INTO `comments` (`userId`, `postId`, `content`) VALUES (?, ?, ?);", userId, postId, content);
             message.setResponse("Comment added!");
-            emailContent.setRecipient(getEmailByPostId(postId));
-            emailContent.setSubject("Someone commented on your photo!");
-            emailContent.setBody(getUserNameById(userId) + " says \"" + content + "\"");
-            util.sendMail(emailContent);
+            User user = new User();
+            user.setId(getIdByPostId(postId));
+            if (get_notification_preference(user) == 1) {
+                emailContent.setRecipient(getEmailByPostId(postId));
+                emailContent.setSubject("Someone commented on your photo!");
+                emailContent.setBody(getUserNameById(userId) + " says \"" + content + "\"");
+                util.sendMail(emailContent);
+            }
         } catch (Exception e) {
             message.setResponse("Error adding comment");
             e.printStackTrace();
@@ -92,6 +125,15 @@ public class PostRepository {
         return (res);
     }
 
+    public int get_notification_preference(User user) {
+        List<Map<String, Object>> res;
+
+        res = jdbcTemplate.queryForList("SELECT receive_notifications FROM users WHERE id = ?;", user.getId());
+        if (res.size() > 0)
+            return ((int) res.get(0).get("receive_notifications"));
+        return (-1);
+    }
+
     public Message likePost(int userId, int postId) {
         Message message = new Message();
         List<Map<String, Object>> res;
@@ -107,10 +149,14 @@ public class PostRepository {
         try {
             jdbcTemplate.update("INSERT INTO `likes` (`userId`, `postId`) VALUES (?, ?);", userId, postId);
             message.setResponse("Post liked!");
-            content.setRecipient(getEmailByPostId(postId));
-            content.setSubject("Someone liked your photo!");
-            content.setBody(getUserNameById(userId) + " has liked your post!");
-            util.sendMail(content);
+            User user = new User();
+            user.setId(getIdByPostId(postId));
+            if (get_notification_preference(user) == 1) {
+                content.setRecipient(getEmailByPostId(postId));
+                content.setSubject("Someone liked your photo!");
+                content.setBody(getUserNameById(userId) + " has liked your post!");
+                util.sendMail(content);
+            }
         } catch (Exception e) {
             message.setResponse("Error liking post");
             e.printStackTrace();
@@ -153,9 +199,14 @@ public class PostRepository {
         return(id.intValue());
     }
 
-    public Message addPost(Post post) {
+    //TEST
+    public Message addPost(Post post, int userId) {
         String base64URL = post.getPhoto();
         Message response = new Message();
+        if (authenticate(userId, post.getPassword()) != 1) {
+            response.setResponse("Authentication failed!");
+            return (response);
+        }
         try {
             byte[] array = convertToImg(base64URL);
             writeBytesToImg(array, "userPhotos/" + Integer.toString(post.getId()) + ".png");

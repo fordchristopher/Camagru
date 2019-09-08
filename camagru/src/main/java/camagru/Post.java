@@ -5,6 +5,11 @@ public class Post {
     private int userId;
     private String photo;
     private String date;
+    private String password;
+
+    public String getPassword() { return (this.password); }
+
+    public void setPassword(String password) { this.password = password; }
 
     public int getId() {
         return (this.id);

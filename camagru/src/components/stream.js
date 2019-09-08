@@ -17,38 +17,42 @@ class Stream extends React.Component {
     };
   }
   componentDidMount() {
-    const constraints = { video: true };
+    if (this.props.user)
+    {
+      const constraints = { video: true };
 
-    const video = document.querySelector("video");
-    const canvas = document.querySelector("canvas");
-    const context = canvas.getContext("2d");
-    let mediaStream = null;
+      const video = document.querySelector("video");
+      const canvas = document.querySelector("canvas");
+      const context = canvas.getContext("2d");
+      let mediaStream = null;
 
-    navigator.mediaDevices
-      .getUserMedia(constraints)
-      .then(stream => {
-        video.srcObject = stream;
-        video.play();
-        mediaStream = stream;
-      })
-      .catch(err => console.error(err));
+      navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then(stream => {
+          video.srcObject = stream;
+          video.play();
+          mediaStream = stream;
+        })
+        .catch(err => console.error(err));
 
-    document
-      .querySelector("#snap")
-      .addEventListener("click", () => snapshot(this.state.prop), false);
+      document
+        .querySelector("#snap")
+        .addEventListener("click", () => snapshot(this.state.prop), false);
 
-    function snapshot(id) {
-      if (mediaStream) {
-        context.drawImage(video, 0, 0, video.width, video.height);
-        if (id)
-          context.drawImage(
-            document.querySelector(`#${id}`),
-            0,
-            0,
-            video.width,
-            video.height
-          );
+      function snapshot(id) {
+        if (mediaStream) {
+          context.drawImage(video, 0, 0, video.width, video.height);
+          if (id)
+            context.drawImage(
+              document.querySelector(`#${id}`),
+              0,
+              0,
+              video.width,
+              video.height
+            );
+        }
       }
+
     }
   }
 
@@ -76,26 +80,28 @@ class Stream extends React.Component {
 
   postPhoto = () => {
     fetch(`${APIUrl}/posts/add`, {
-				method: 'post',
-				headers: {
-					'Origin': baseURL,
-					'Access-Control-Request-Method': 'POST',
-					'Content-Type': 'application/json'
-        },
-        mode: 'cors',
-				body: JSON.stringify({
-          photo: this.state.photoURL.split(",")[1],
-          userId: this.state.user.id
-				})
-			})
+      method: 'post',
+      headers: {
+        'Origin': baseURL,
+        'Access-Control-Request-Method': 'POST',
+        'Content-Type': 'application/json'
+      },
+      mode: 'cors',
+      body: JSON.stringify({
+        photo: this.state.photoURL.split(",")[1],
+        userId: this.state.user.id,
+        password: this.state.user.password,
+        id: this.props.user.id
+      })
+    })
       .then(res => res.json())
       .then(data => alert(data.response))
-      window.setTimeout(() => {
-        this.setState({
+    window.setTimeout(() => {
+      this.setState({
         photoTaken: false
       });
     }, 100);
-};
+  };
 
   acceptUpload = () => {
     var file = document.querySelector("input[type=file]").files[0];
@@ -104,10 +110,10 @@ class Stream extends React.Component {
     reader.addEventListener(
       "load",
       () => {
-		  this.setState({
-			  photoURL: reader.result
-		  }, () => this.postPhoto());
-	  },
+        this.setState({
+          photoURL: reader.result
+        }, () => this.postPhoto());
+      },
       false
     );
 
@@ -155,10 +161,22 @@ class Stream extends React.Component {
     }
   };
 
+  redirct = () =>
+  {
+    window.location.href = `${baseURL}/`;
+  }
+
   render() {
+    if (this.props.user == null) {
+      return (
+        <>
+         {this.redirct()} 
+        </>
+      );
+    }
     return (
       <>
-        <Sidebar user={this.state.user}/>
+        <Sidebar user={this.state.user} />
         <div className="container-studio">
           <h1 className="text-secondary">Welcome to the studio!</h1>
           <div className="container-props">
