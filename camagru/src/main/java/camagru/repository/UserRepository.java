@@ -71,8 +71,13 @@ public class UserRepository {
         user.setPassword(password);
         user.setEmail(email);
         user.setSalt(getSaltByEmail(email));
-        String securePassword = PasswordUtils.generateSecurePassword(password, user.getSalt());
         data = new HashMap<String, Object>();
+        if (user.getSalt() == "")
+        {
+            data.put("data", "Invalid Login");
+            return (data);
+        }
+        String securePassword = PasswordUtils.generateSecurePassword(password, user.getSalt());
         res = jdbcTemplate.queryForList("SELECT * FROM users WHERE email = ? AND password = ?;", user.getEmail(), securePassword);
         if (res.size() > 0) {
             if ((int) res.get(0).get("active") == 0) {
@@ -231,8 +236,8 @@ public class UserRepository {
                 jdbcTemplate.update("INSERT INTO users (`email`, `username`, `password`, `salt`) VALUES (?, ?, ?, ?);",
                         user.getEmail(), user.getUsername(), securePassword, user.getSalt());
                 url = genRandomStr();
-                jdbcTemplate.update("INSERT INTO unique_urls (userId, url, reason) VALUES (?, ?, 'registration');", user.getId(), url);
-                content.setBody("Thanks for signing up with us. Here is the link to activate your account: http://localhost:8080/users/confirm?key=" + url);
+                jdbcTemplate.update("INSERT INTO unique_urls (userId, url) VALUES (?, ?);", user.getId(), url);
+                content.setBody("Thanks for signing up with us. Here is the link to activate your account: http://localhost:8000/users/confirm?key=" + url);
                 util.sendMail(content);
                 msg.setResponse("Success, an email has been sent to " + user.getEmail() + "for confirmation.");
             } catch (Exception e) {
